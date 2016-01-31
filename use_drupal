@@ -1,0 +1,8 @@
+#!/bin/sh
+
+PATH="/Applications/drupal-7.41-1/apps/drupal/drush:/Applications/drupal-7.41-1/sqlite/bin:/Applications/drupal-7.41-1/php/bin:/Applications/drupal-7.41-1/mysql/bin:/Applications/drupal-7.41-1/apache2/bin:/Applications/drupal-7.41-1/common/bin:$PATH"
+BITNAMI_ROOT="/Applications/drupal-7.41-1"
+export BITNAMI_ROOT
+
+exec /bin/bash --noprofile --norc
+                    

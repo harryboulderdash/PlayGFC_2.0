@@ -1,0 +1,656 @@
+151125 19:37:24 mysqld_safe Starting mysqld.bin daemon with databases from /Applications/drupal-7.41-1/mysql/data
+2015-11-25 19:37:24 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).
+2015-11-25 19:37:24 0 [Note] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin (mysqld 5.6.26) starting as process 17230 ...
+2015-11-25 19:37:24 17230 [Note] Plugin 'FEDERATED' is disabled.
+2015-11-25 19:37:24 17230 [Note] InnoDB: Using atomics to ref count buffer pool pages
+2015-11-25 19:37:24 17230 [Note] InnoDB: The InnoDB memory heap is disabled
+2015-11-25 19:37:24 17230 [Note] InnoDB: Mutexes and rw_locks use GCC atomic builtins
+2015-11-25 19:37:24 17230 [Note] InnoDB: Memory barrier is not used
+2015-11-25 19:37:24 17230 [Note] InnoDB: Compressed tables use zlib 1.2.6
+2015-11-25 19:37:24 17230 [Note] InnoDB: Using CPU crc32 instructions
+2015-11-25 19:37:24 17230 [Note] InnoDB: Initializing buffer pool, size = 128.0M
+2015-11-25 19:37:24 17230 [Note] InnoDB: Completed initialization of buffer pool
+2015-11-25 19:37:24 17230 [Note] InnoDB: Highest supported file format is Barracuda.
+2015-11-25 19:37:24 17230 [Note] InnoDB: 128 rollback segment(s) are active.
+2015-11-25 19:37:24 17230 [Note] InnoDB: Waiting for purge to start
+2015-11-25 19:37:24 17230 [Note] InnoDB: 5.6.26 started; log sequence number 1625987
+2015-11-25 19:37:24 17230 [Warning] No existing UUID has been found, so we assume that this is the first time that this server has been started. Generating a new UUID: dcd3340c-93d5-11e5-9189-4cc0de1be83d.
+2015-11-25 19:37:24 17230 [Note] RSA private key file not found: /Applications/drupal-7.41-1/mysql/data//private_key.pem. Some authentication plugins will not work.
+2015-11-25 19:37:24 17230 [Note] RSA public key file not found: /Applications/drupal-7.41-1/mysql/data//public_key.pem. Some authentication plugins will not work.
+2015-11-25 19:37:24 17230 [Note] Server hostname (bind-address): '127.0.0.1'; port: 3308
+2015-11-25 19:37:24 17230 [Note]   - '127.0.0.1' resolves to '127.0.0.1';
+2015-11-25 19:37:24 17230 [Note] Server socket created on IP: '127.0.0.1'.
+2015-11-25 19:37:24 17230 [Note] Event Scheduler: Loaded 0 events
+2015-11-25 19:37:24 17230 [Note] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin: ready for connections.
+Version: '5.6.26'  socket: '/Applications/drupal-7.41-1/mysql/tmp/mysql.sock'  port: 3308  Source distribution
+2015-11-25 20:39:56 17230 [Note] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin: Normal shutdown
+
+2015-11-25 20:39:56 17230 [Note] Giving 4 client threads a chance to die gracefully
+2015-11-25 20:39:56 17230 [Note] Event Scheduler: Purging the queue. 0 events
+2015-11-25 20:39:56 17230 [Note] Shutting down slave threads
+2015-11-25 20:39:58 17230 [Note] Forcefully disconnecting 4 remaining clients
+2015-11-25 20:39:58 17230 [Warning] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin: Forcing close of thread 38  user: 'bn_drupal'
+
+2015-11-25 20:39:58 17230 [Warning] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin: Forcing close of thread 40  user: 'bn_drupal'
+
+2015-11-25 20:39:58 17230 [Warning] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin: Forcing close of thread 39  user: 'bn_drupal'
+
+2015-11-25 20:39:58 17230 [Warning] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin: Forcing close of thread 41  user: 'bn_drupal'
+
+2015-11-25 20:39:58 17230 [Note] Binlog end
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'partition'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'PERFORMANCE_SCHEMA'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_SYS_DATAFILES'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_SYS_TABLESPACES'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_SYS_FOREIGN_COLS'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_SYS_FOREIGN'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_SYS_FIELDS'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_SYS_COLUMNS'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_SYS_INDEXES'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_SYS_TABLESTATS'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_SYS_TABLES'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_FT_INDEX_TABLE'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_FT_INDEX_CACHE'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_FT_CONFIG'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_FT_BEING_DELETED'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_FT_DELETED'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_FT_DEFAULT_STOPWORD'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_METRICS'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_BUFFER_POOL_STATS'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_BUFFER_PAGE_LRU'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_BUFFER_PAGE'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_CMP_PER_INDEX_RESET'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_CMP_PER_INDEX'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_CMPMEM_RESET'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_CMPMEM'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_CMP_RESET'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_CMP'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_LOCK_WAITS'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_LOCKS'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'INNODB_TRX'
+2015-11-25 20:39:58 17230 [Note] Shutting down plugin 'InnoDB'
+2015-11-25 20:39:58 17230 [Note] InnoDB: FTS optimize thread exiting.
+2015-11-25 20:39:58 17230 [Note] InnoDB: Starting shutdown...
+2015-11-25 20:39:59 17230 [Note] InnoDB: Shutdown completed; log sequence number 43467592
+2015-11-25 20:39:59 17230 [Note] Shutting down plugin 'BLACKHOLE'
+2015-11-25 20:39:59 17230 [Note] Shutting down plugin 'ARCHIVE'
+2015-11-25 20:39:59 17230 [Note] Shutting down plugin 'MRG_MYISAM'
+2015-11-25 20:39:59 17230 [Note] Shutting down plugin 'MyISAM'
+2015-11-25 20:39:59 17230 [Note] Shutting down plugin 'MEMORY'
+2015-11-25 20:39:59 17230 [Note] Shutting down plugin 'CSV'
+2015-11-25 20:39:59 17230 [Note] Shutting down plugin 'sha256_password'
+2015-11-25 20:39:59 17230 [Note] Shutting down plugin 'mysql_old_password'
+2015-11-25 20:39:59 17230 [Note] Shutting down plugin 'mysql_native_password'
+2015-11-25 20:39:59 17230 [Note] Shutting down plugin 'binlog'
+2015-11-25 20:39:59 17230 [Note] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin: Shutdown complete
+
+151125 20:39:59 mysqld_safe mysqld from pid file /Applications/drupal-7.41-1/mysql/data/mysqld.pid ended
+151125 20:40:07 mysqld_safe Starting mysqld.bin daemon with databases from /Applications/drupal-7.41-1/mysql/data
+2015-11-25 20:40:07 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).
+2015-11-25 20:40:07 0 [Note] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin (mysqld 5.6.26) starting as process 26822 ...
+2015-11-25 20:40:07 26822 [Note] Plugin 'FEDERATED' is disabled.
+2015-11-25 20:40:07 26822 [Note] InnoDB: Using atomics to ref count buffer pool pages
+2015-11-25 20:40:07 26822 [Note] InnoDB: The InnoDB memory heap is disabled
+2015-11-25 20:40:07 26822 [Note] InnoDB: Mutexes and rw_locks use GCC atomic builtins
+2015-11-25 20:40:07 26822 [Note] InnoDB: Memory barrier is not used
+2015-11-25 20:40:07 26822 [Note] InnoDB: Compressed tables use zlib 1.2.6
+2015-11-25 20:40:07 26822 [Note] InnoDB: Using CPU crc32 instructions
+2015-11-25 20:40:07 26822 [Note] InnoDB: Initializing buffer pool, size = 128.0M
+2015-11-25 20:40:07 26822 [Note] InnoDB: Completed initialization of buffer pool
+2015-11-25 20:40:07 26822 [Note] InnoDB: Highest supported file format is Barracuda.
+2015-11-25 20:40:08 26822 [Note] InnoDB: 128 rollback segment(s) are active.
+2015-11-25 20:40:08 26822 [Note] InnoDB: Waiting for purge to start
+2015-11-25 20:40:08 26822 [Note] InnoDB: 5.6.26 started; log sequence number 43467592
+2015-11-25 20:40:08 26822 [Note] RSA private key file not found: /Applications/drupal-7.41-1/mysql/data//private_key.pem. Some authentication plugins will not work.
+2015-11-25 20:40:08 26822 [Note] RSA public key file not found: /Applications/drupal-7.41-1/mysql/data//public_key.pem. Some authentication plugins will not work.
+2015-11-25 20:40:08 26822 [Note] Server hostname (bind-address): '127.0.0.1'; port: 3308
+2015-11-25 20:40:08 26822 [Note]   - '127.0.0.1' resolves to '127.0.0.1';
+2015-11-25 20:40:08 26822 [Note] Server socket created on IP: '127.0.0.1'.
+2015-11-25 20:40:08 26822 [Note] Event Scheduler: Loaded 0 events
+2015-11-25 20:40:08 26822 [Note] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin: ready for connections.
+Version: '5.6.26'  socket: '/Applications/drupal-7.41-1/mysql/tmp/mysql.sock'  port: 3308  Source distribution
+2015-11-27 12:08:10 26822 [Note] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin: Normal shutdown
+
+2015-11-27 12:08:10 26822 [Note] Giving 0 client threads a chance to die gracefully
+2015-11-27 12:08:10 26822 [Note] Event Scheduler: Purging the queue. 0 events
+2015-11-27 12:08:10 26822 [Note] Shutting down slave threads
+2015-11-27 12:08:10 26822 [Note] Forcefully disconnecting 0 remaining clients
+2015-11-27 12:08:10 26822 [Note] Binlog end
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'partition'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'PERFORMANCE_SCHEMA'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_SYS_DATAFILES'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_SYS_TABLESPACES'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_SYS_FOREIGN_COLS'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_SYS_FOREIGN'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_SYS_FIELDS'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_SYS_COLUMNS'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_SYS_INDEXES'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_SYS_TABLESTATS'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_SYS_TABLES'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_FT_INDEX_TABLE'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_FT_INDEX_CACHE'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_FT_CONFIG'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_FT_BEING_DELETED'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_FT_DELETED'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_FT_DEFAULT_STOPWORD'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_METRICS'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_BUFFER_POOL_STATS'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_BUFFER_PAGE_LRU'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_BUFFER_PAGE'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_CMP_PER_INDEX_RESET'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_CMP_PER_INDEX'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_CMPMEM_RESET'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_CMPMEM'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_CMP_RESET'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_CMP'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_LOCK_WAITS'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_LOCKS'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'INNODB_TRX'
+2015-11-27 12:08:11 26822 [Note] Shutting down plugin 'InnoDB'
+2015-11-27 12:08:11 26822 [Note] InnoDB: FTS optimize thread exiting.
+2015-11-27 12:08:11 26822 [Note] InnoDB: Starting shutdown...
+2015-11-27 12:08:12 26822 [Note] InnoDB: Shutdown completed; log sequence number 347635375
+2015-11-27 12:08:12 26822 [Note] Shutting down plugin 'BLACKHOLE'
+2015-11-27 12:08:12 26822 [Note] Shutting down plugin 'ARCHIVE'
+2015-11-27 12:08:12 26822 [Note] Shutting down plugin 'MRG_MYISAM'
+2015-11-27 12:08:12 26822 [Note] Shutting down plugin 'MyISAM'
+2015-11-27 12:08:12 26822 [Note] Shutting down plugin 'MEMORY'
+2015-11-27 12:08:12 26822 [Note] Shutting down plugin 'CSV'
+2015-11-27 12:08:12 26822 [Note] Shutting down plugin 'sha256_password'
+2015-11-27 12:08:12 26822 [Note] Shutting down plugin 'mysql_old_password'
+2015-11-27 12:08:12 26822 [Note] Shutting down plugin 'mysql_native_password'
+2015-11-27 12:08:12 26822 [Note] Shutting down plugin 'binlog'
+2015-11-27 12:08:12 26822 [Note] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin: Shutdown complete
+
+151128 02:54:53 mysqld_safe Starting mysqld.bin daemon with databases from /Applications/drupal-7.41-1/mysql/data
+2015-11-28 02:54:54 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).
+2015-11-28 02:54:54 0 [Note] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin (mysqld 5.6.26) starting as process 51785 ...
+2015-11-28 02:54:54 51785 [Note] Plugin 'FEDERATED' is disabled.
+2015-11-28 02:54:54 51785 [Note] InnoDB: Using atomics to ref count buffer pool pages
+2015-11-28 02:54:54 51785 [Note] InnoDB: The InnoDB memory heap is disabled
+2015-11-28 02:54:54 51785 [Note] InnoDB: Mutexes and rw_locks use GCC atomic builtins
+2015-11-28 02:54:54 51785 [Note] InnoDB: Memory barrier is not used
+2015-11-28 02:54:54 51785 [Note] InnoDB: Compressed tables use zlib 1.2.6
+2015-11-28 02:54:54 51785 [Note] InnoDB: Using CPU crc32 instructions
+2015-11-28 02:54:54 51785 [Note] InnoDB: Initializing buffer pool, size = 128.0M
+2015-11-28 02:54:54 51785 [Note] InnoDB: Completed initialization of buffer pool
+2015-11-28 02:54:54 51785 [Note] InnoDB: Highest supported file format is Barracuda.
+2015-11-28 02:54:54 51785 [Note] InnoDB: 128 rollback segment(s) are active.
+2015-11-28 02:54:54 51785 [Note] InnoDB: Waiting for purge to start
+2015-11-28 02:54:54 51785 [Note] InnoDB: 5.6.26 started; log sequence number 347635375
+2015-11-28 02:54:54 51785 [Note] RSA private key file not found: /Applications/drupal-7.41-1/mysql/data//private_key.pem. Some authentication plugins will not work.
+2015-11-28 02:54:54 51785 [Note] RSA public key file not found: /Applications/drupal-7.41-1/mysql/data//public_key.pem. Some authentication plugins will not work.
+2015-11-28 02:54:54 51785 [Note] Server hostname (bind-address): '127.0.0.1'; port: 3308
+2015-11-28 02:54:54 51785 [Note]   - '127.0.0.1' resolves to '127.0.0.1';
+2015-11-28 02:54:54 51785 [Note] Server socket created on IP: '127.0.0.1'.
+2015-11-28 02:54:54 51785 [Note] Event Scheduler: Loaded 0 events
+2015-11-28 02:54:54 51785 [Note] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin: ready for connections.
+Version: '5.6.26'  socket: '/Applications/drupal-7.41-1/mysql/tmp/mysql.sock'  port: 3308  Source distribution
+InnoDB: Warning: a long semaphore wait:
+--Thread 4946173952 has waited at row0purge.cc line 768 for 4720.00 seconds the semaphore:
+S-lock on RW-latch at 0x101164180 created in file dict0dict.cc line 1035
+number of readers 0, waiters flag 0, lock_word: 100000
+Last time read locked in file row0purge.cc line 768
+Last time write locked in file /bitnami/mampstack-osx-x64/src/mysql-5.6.26/storage/innobase/dict/dict0stats.cc line 2385
+InnoDB: Warning: a long semaphore wait:
+--Thread 4942831616 has waited at srv0srv.cc line 2000 for 4719.00 seconds the semaphore:
+X-lock on RW-latch at 0x101164180 created in file dict0dict.cc line 1035
+number of readers 0, waiters flag 0, lock_word: 100000
+Last time read locked in file row0purge.cc line 768
+Last time write locked in file /bitnami/mampstack-osx-x64/src/mysql-5.6.26/storage/innobase/dict/dict0stats.cc line 2385
+InnoDB: ###### Starts InnoDB Monitor for 30 secs to print diagnostic info:
+InnoDB: Pending preads 0, pwrites 0
+
+=====================================
+2015-11-29 11:53:03 126c87000 INNODB MONITOR OUTPUT
+=====================================
+Per second averages calculated from the last 2 seconds
+-----------------
+BACKGROUND THREAD
+-----------------
+srv_master_thread loops: 965 srv_active, 0 srv_shutdown, 41738 srv_idle
+srv_master_thread log flush and writes: 42693
+----------
+SEMAPHORES
+----------
+OS WAIT ARRAY INFO: reservation count 3186
+OS WAIT ARRAY INFO: signal count 3386
+Mutex spin waits 4038, rounds 28929, OS waits 752
+RW-shared spins 2194, rounds 67866, OS waits 2192
+RW-excl spins 167, rounds 11182, OS waits 196
+Spin rounds per wait: 7.16 mutex, 30.93 RW-shared, 66.96 RW-excl
+------------
+TRANSACTIONS
+------------
+Trx id counter 254110
+Purge done for trx's n:o < 254110 undo n:o < 0 state: running but idle
+History list length 1238
+LIST OF TRANSACTIONS FOR EACH SESSION:
+--------
+FILE I/O
+--------
+I/O thread 0 state: waiting for i/o request (insert buffer thread)
+I/O thread 1 state: waiting for i/o request (log thread)
+I/O thread 2 state: waiting for i/o request (read thread)
+I/O thread 3 state: waiting for i/o request (read thread)
+I/O thread 4 state: waiting for i/o request (read thread)
+I/O thread 5 state: waiting for i/o request (read thread)
+I/O thread 6 state: waiting for i/o request (write thread)
+I/O thread 7 state: waiting for i/o request (write thread)
+I/O thread 8 state: waiting for i/o request (write thread)
+I/O thread 9 state: waiting for i/o request (write thread)
+Pending normal aio reads: 0 [0, 0, 0, 0] , aio writes: 0 [0, 0, 0, 0] ,
+ ibuf aio reads: 0, log i/o's: 0, sync i/o's: 0
+Pending flushes (fsync) log: 0; buffer pool: 0
+2797 OS file reads, 35766 OS file writes, 22191 OS fsyncs
+0.00 reads/s, 0 avg bytes/read, 5.00 writes/s, 5.00 fsyncs/s
+-------------------------------------
+INSERT BUFFER AND ADAPTIVE HASH INDEX
+-------------------------------------
+Ibuf: size 1, free list len 57, seg size 59, 13 merges
+merged operations:
+ insert 73, delete mark 1566, delete 17
+discarded operations:
+ insert 0, delete mark 0, delete 0
+Hash table size 276671, node heap has 29 buffer(s)
+10.99 hash searches/s, 0.00 non-hash searches/s
+---
+LOG
+---
+Log sequence number 650524016
+Log flushed up to   650524016
+Pages flushed up to 650524016
+Last checkpoint at  650524016
+0 pending log writes, 0 pending chkp writes
+14630 log i/o's done, 1.50 log i/o's/second
+----------------------
+BUFFER POOL AND MEMORY
+----------------------
+Total memory allocated 137363456; in additional pool allocated 0
+Dictionary memory allocated 2733554
+Buffer pool size   8191
+Free buffers       4790
+Database pages     3372
+Old database pages 1224
+Modified db pages  0
+Pending reads 0
+Pending writes: LRU 0, flush list 0, single page 0
+Pages made young 9144, not young 34873
+0.00 youngs/s, 0.00 non-youngs/s
+Pages read 2544, created 5061, written 38781
+0.00 reads/s, 0.00 creates/s, 3.00 writes/s
+Buffer pool hit rate 1000 / 1000, young-making rate 0 / 1000 not 0 / 1000
+Pages read ahead 0.00/s, evicted without access 0.00/s, Random read ahead 0.00/s
+LRU len: 3372, unzip_LRU len: 0
+I/O sum[1394]:cur[6], unzip sum[0]:cur[0]
+--------------
+ROW OPERATIONS
+--------------
+0 queries inside InnoDB, 0 queries in queue
+0 read views open inside InnoDB
+Main thread id 4942831616, state: sleeping
+Number of rows inserted 13781, updated 7189, deleted 11422, read 1504042
+0.00 inserts/s, 0.00 updates/s, 0.00 deletes/s, 0.00 reads/s
+----------------------------
+END OF INNODB MONITOR OUTPUT
+============================
+
+=====================================
+2015-11-29 11:53:23 126c87000 INNODB MONITOR OUTPUT
+=====================================
+Per second averages calculated from the last 20 seconds
+-----------------
+BACKGROUND THREAD
+-----------------
+srv_master_thread loops: 967 srv_active, 0 srv_shutdown, 41756 srv_idle
+srv_master_thread log flush and writes: 42713
+----------
+SEMAPHORES
+----------
+OS WAIT ARRAY INFO: reservation count 3190
+OS WAIT ARRAY INFO: signal count 3390
+Mutex spin waits 4039, rounds 28929, OS waits 752
+RW-shared spins 2198, rounds 67986, OS waits 2196
+RW-excl spins 167, rounds 11182, OS waits 196
+Spin rounds per wait: 7.16 mutex, 30.93 RW-shared, 66.96 RW-excl
+------------
+TRANSACTIONS
+------------
+Trx id counter 254118
+Purge done for trx's n:o < 254118 undo n:o < 0 state: running but idle
+History list length 1242
+LIST OF TRANSACTIONS FOR EACH SESSION:
+--------
+FILE I/O
+--------
+I/O thread 0 state: waiting for i/o request (insert buffer thread)
+I/O thread 1 state: waiting for i/o request (log thread)
+I/O thread 2 state: waiting for i/o request (read thread)
+I/O thread 3 state: waiting for i/o request (read thread)
+I/O thread 4 state: waiting for i/o request (read thread)
+I/O thread 5 state: waiting for i/o request (read thread)
+I/O thread 6 state: waiting for i/o request (write thread)
+I/O thread 7 state: waiting for i/o request (write thread)
+I/O thread 8 state: waiting for i/o request (write thread)
+I/O thread 9 state: waiting for i/o request (write thread)
+Pending normal aio reads: 0 [0, 0, 0, 0] , aio writes: 0 [0, 0, 0, 0] ,
+ ibuf aio reads: 0, log i/o's: 0, sync i/o's: 0
+Pending flushes (fsync) log: 0; buffer pool: 0
+2797 OS file reads, 35784 OS file writes, 22205 OS fsyncs
+0.00 reads/s, 0 avg bytes/read, 0.90 writes/s, 0.70 fsyncs/s
+-------------------------------------
+INSERT BUFFER AND ADAPTIVE HASH INDEX
+-------------------------------------
+Ibuf: size 1, free list len 57, seg size 59, 13 merges
+merged operations:
+ insert 73, delete mark 1566, delete 17
+discarded operations:
+ insert 0, delete mark 0, delete 0
+Hash table size 276671, node heap has 29 buffer(s)
+3.00 hash searches/s, 0.00 non-hash searches/s
+---
+LOG
+---
+Log sequence number 650531630
+Log flushed up to   650531630
+Pages flushed up to 650531630
+Last checkpoint at  650531630
+0 pending log writes, 0 pending chkp writes
+14636 log i/o's done, 0.30 log i/o's/second
+----------------------
+BUFFER POOL AND MEMORY
+----------------------
+Total memory allocated 137363456; in additional pool allocated 0
+Dictionary memory allocated 2733554
+Buffer pool size   8191
+Free buffers       4790
+Database pages     3372
+Old database pages 1224
+Modified db pages  0
+Pending reads 0
+Pending writes: LRU 0, flush list 0, single page 0
+Pages made young 9144, not young 34873
+0.00 youngs/s, 0.00 non-youngs/s
+Pages read 2544, created 5061, written 38793
+0.00 reads/s, 0.00 creates/s, 0.60 writes/s
+Buffer pool hit rate 1000 / 1000, young-making rate 0 / 1000 not 0 / 1000
+Pages read ahead 0.00/s, evicted without access 0.00/s, Random read ahead 0.00/s
+LRU len: 3372, unzip_LRU len: 0
+I/O sum[1394]:cur[18], unzip sum[0]:cur[0]
+--------------
+ROW OPERATIONS
+--------------
+0 queries inside InnoDB, 0 queries in queue
+0 read views open inside InnoDB
+Main thread id 4942831616, state: sleeping
+Number of rows inserted 13781, updated 7189, deleted 11422, read 1504042
+0.00 inserts/s, 0.00 updates/s, 0.00 deletes/s, 0.00 reads/s
+----------------------------
+END OF INNODB MONITOR OUTPUT
+============================
+InnoDB: ###### Diagnostic info printed to the standard error stream
+InnoDB: Warning: a long semaphore wait:
+--Thread 4946173952 has waited at row0purge.cc line 768 for 2797.00 seconds the semaphore:
+S-lock on RW-latch at 0x101164180 created in file dict0dict.cc line 1035
+a writer (thread id 4947783680) has reserved it in mode  exclusive
+number of readers 0, waiters flag 1, lock_word: 0
+Last time read locked in file row0purge.cc line 768
+Last time write locked in file /bitnami/mampstack-osx-x64/src/mysql-5.6.26/storage/innobase/dict/dict0stats.cc line 2385
+InnoDB: Warning: a long semaphore wait:
+--Thread 4942831616 has waited at srv0srv.cc line 2000 for 2796.00 seconds the semaphore:
+X-lock on RW-latch at 0x101164180 created in file dict0dict.cc line 1035
+a writer (thread id 4947783680) has reserved it in mode  exclusive
+number of readers 0, waiters flag 1, lock_word: 0
+Last time read locked in file row0purge.cc line 768
+Last time write locked in file /bitnami/mampstack-osx-x64/src/mysql-5.6.26/storage/innobase/dict/dict0stats.cc line 2385
+InnoDB: ###### Starts InnoDB Monitor for 30 secs to print diagnostic info:
+InnoDB: Pending preads 0, pwrites 0
+
+=====================================
+2015-12-07 19:43:28 126c87000 INNODB MONITOR OUTPUT
+=====================================
+Per second averages calculated from the last 0 seconds
+-----------------
+BACKGROUND THREAD
+-----------------
+srv_master_thread loops: 3707 srv_active, 0 srv_shutdown, 295870 srv_idle
+srv_master_thread log flush and writes: 299544
+----------
+SEMAPHORES
+----------
+OS WAIT ARRAY INFO: reservation count 11173
+OS WAIT ARRAY INFO: signal count 12082
+Mutex spin waits 16563, rounds 109962, OS waits 2769
+RW-shared spins 7920, rounds 238708, OS waits 7601
+RW-excl spins 687, rounds 37421, OS waits 633
+Spin rounds per wait: 6.64 mutex, 30.14 RW-shared, 54.47 RW-excl
+------------
+TRANSACTIONS
+------------
+Trx id counter 582132
+Purge done for trx's n:o < 582132 undo n:o < 0 state: running but idle
+History list length 952
+LIST OF TRANSACTIONS FOR EACH SESSION:
+--------
+FILE I/O
+--------
+I/O thread 0 state: waiting for i/o request (insert buffer thread)
+I/O thread 1 state: waiting for i/o request (log thread)
+I/O thread 2 state: waiting for i/o request (read thread)
+I/O thread 3 state: waiting for i/o request (read thread)
+I/O thread 4 state: waiting for i/o request (read thread)
+I/O thread 5 state: waiting for i/o request (read thread)
+I/O thread 6 state: waiting for i/o request (write thread)
+I/O thread 7 state: waiting for i/o request (write thread)
+I/O thread 8 state: waiting for i/o request (write thread)
+I/O thread 9 state: waiting for i/o request (write thread)
+Pending normal aio reads: 0 [0, 0, 0, 0] , aio writes: 0 [0, 0, 0, 0] ,
+ ibuf aio reads: 0, log i/o's: 0, sync i/o's: 0
+Pending flushes (fsync) log: 0; buffer pool: 0
+4284 OS file reads, 136167 OS file writes, 82911 OS fsyncs
+0.00 reads/s, 0 avg bytes/read, 6000.00 writes/s, 6000.00 fsyncs/s
+-------------------------------------
+INSERT BUFFER AND ADAPTIVE HASH INDEX
+-------------------------------------
+Ibuf: size 1, free list len 57, seg size 59, 13 merges
+merged operations:
+ insert 73, delete mark 1566, delete 17
+discarded operations:
+ insert 0, delete mark 0, delete 0
+Hash table size 276671, node heap has 43 buffer(s)
+176000.00 hash searches/s, 2000.00 non-hash searches/s
+---
+LOG
+---
+Log sequence number 1504250474
+Log flushed up to   1504250474
+Pages flushed up to 1504221196
+Last checkpoint at  1504221196
+0 pending log writes, 0 pending chkp writes
+55836 log i/o's done, 2.00 log i/o's/second
+----------------------
+BUFFER POOL AND MEMORY
+----------------------
+Total memory allocated 137363456; in additional pool allocated 0
+Dictionary memory allocated 5160516
+Buffer pool size   8191
+Free buffers       3177
+Database pages     4971
+Old database pages 1814
+Modified db pages  7
+Pending reads 0
+Pending writes: LRU 0, flush list 0, single page 0
+Pages made young 18696, not young 48338
+0.00 youngs/s, 0.00 non-youngs/s
+Pages read 3858, created 15694, written 147510
+0.00 reads/s, 0.00 creates/s, 3000.00 writes/s
+Buffer pool hit rate 1000 / 1000, young-making rate 0 / 1000 not 0 / 1000
+Pages read ahead 0.00/s, evicted without access 0.00/s, Random read ahead 0.00/s
+LRU len: 4971, unzip_LRU len: 0
+I/O sum[333]:cur[3], unzip sum[0]:cur[0]
+--------------
+ROW OPERATIONS
+--------------
+0 queries inside InnoDB, 0 queries in queue
+0 read views open inside InnoDB
+Main thread id 4942831616, state: sleeping
+Number of rows inserted 54516, updated 31977, deleted 45013, read 7739962
+0.00 inserts/s, 0.00 updates/s, 0.00 deletes/s, 0.00 reads/s
+----------------------------
+END OF INNODB MONITOR OUTPUT
+============================
+
+=====================================
+2015-12-07 19:43:44 126c87000 INNODB MONITOR OUTPUT
+=====================================
+Per second averages calculated from the last 16 seconds
+-----------------
+BACKGROUND THREAD
+-----------------
+srv_master_thread loops: 3709 srv_active, 0 srv_shutdown, 295883 srv_idle
+srv_master_thread log flush and writes: 299559
+----------
+SEMAPHORES
+----------
+OS WAIT ARRAY INFO: reservation count 11176
+OS WAIT ARRAY INFO: signal count 12085
+Mutex spin waits 16563, rounds 109962, OS waits 2769
+RW-shared spins 7923, rounds 238798, OS waits 7604
+RW-excl spins 687, rounds 37421, OS waits 633
+Spin rounds per wait: 6.64 mutex, 30.14 RW-shared, 54.47 RW-excl
+------------
+TRANSACTIONS
+------------
+Trx id counter 582136
+Purge done for trx's n:o < 582136 undo n:o < 0 state: running but idle
+History list length 954
+LIST OF TRANSACTIONS FOR EACH SESSION:
+--------
+FILE I/O
+--------
+I/O thread 0 state: waiting for i/o request (insert buffer thread)
+I/O thread 1 state: waiting for i/o request (log thread)
+I/O thread 2 state: waiting for i/o request (read thread)
+I/O thread 3 state: waiting for i/o request (read thread)
+I/O thread 4 state: waiting for i/o request (read thread)
+I/O thread 5 state: waiting for i/o request (read thread)
+I/O thread 6 state: waiting for i/o request (write thread)
+I/O thread 7 state: waiting for i/o request (write thread)
+I/O thread 8 state: waiting for i/o request (write thread)
+I/O thread 9 state: waiting for i/o request (write thread)
+Pending normal aio reads: 0 [0, 0, 0, 0] , aio writes: 0 [0, 0, 0, 0] ,
+ ibuf aio reads: 0, log i/o's: 0, sync i/o's: 0
+Pending flushes (fsync) log: 0; buffer pool: 0
+4284 OS file reads, 136188 OS file writes, 82922 OS fsyncs
+0.00 reads/s, 0 avg bytes/read, 1.31 writes/s, 0.69 fsyncs/s
+-------------------------------------
+INSERT BUFFER AND ADAPTIVE HASH INDEX
+-------------------------------------
+Ibuf: size 1, free list len 57, seg size 59, 13 merges
+merged operations:
+ insert 73, delete mark 1566, delete 17
+discarded operations:
+ insert 0, delete mark 0, delete 0
+Hash table size 276671, node heap has 43 buffer(s)
+12.56 hash searches/s, 0.00 non-hash searches/s
+---
+LOG
+---
+Log sequence number 1504284992
+Log flushed up to   1504284992
+Pages flushed up to 1504284992
+Last checkpoint at  1504284992
+0 pending log writes, 0 pending chkp writes
+55840 log i/o's done, 0.25 log i/o's/second
+----------------------
+BUFFER POOL AND MEMORY
+----------------------
+Total memory allocated 137363456; in additional pool allocated 0
+Dictionary memory allocated 5160516
+Buffer pool size   8191
+Free buffers       3177
+Database pages     4971
+Old database pages 1814
+Modified db pages  0
+Pending reads 0
+Pending writes: LRU 0, flush list 0, single page 0
+Pages made young 18696, not young 48338
+0.00 youngs/s, 0.00 non-youngs/s
+Pages read 3858, created 15694, written 147526
+0.00 reads/s, 0.00 creates/s, 1.00 writes/s
+Buffer pool hit rate 1000 / 1000, young-making rate 0 / 1000 not 0 / 1000
+Pages read ahead 0.00/s, evicted without access 0.00/s, Random read ahead 0.00/s
+LRU len: 4971, unzip_LRU len: 0
+I/O sum[333]:cur[19], unzip sum[0]:cur[0]
+--------------
+ROW OPERATIONS
+--------------
+0 queries inside InnoDB, 0 queries in queue
+0 read views open inside InnoDB
+Main thread id 4942831616, state: sleeping
+Number of rows inserted 54516, updated 31977, deleted 45013, read 7739962
+0.00 inserts/s, 0.00 updates/s, 0.00 deletes/s, 0.00 reads/s
+----------------------------
+END OF INNODB MONITOR OUTPUT
+============================
+InnoDB: ###### Diagnostic info printed to the standard error stream
+160117 20:53:30 mysqld_safe Starting mysqld.bin daemon with databases from /Applications/drupal-7.41-1/mysql/data
+2016-01-17 20:53:31 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).
+2016-01-17 20:53:31 0 [Note] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin (mysqld 5.6.26) starting as process 2908 ...
+2016-01-17 20:53:31 2908 [Note] Plugin 'FEDERATED' is disabled.
+2016-01-17 20:53:31 2908 [Note] InnoDB: Using atomics to ref count buffer pool pages
+2016-01-17 20:53:31 2908 [Note] InnoDB: The InnoDB memory heap is disabled
+2016-01-17 20:53:31 2908 [Note] InnoDB: Mutexes and rw_locks use GCC atomic builtins
+2016-01-17 20:53:31 2908 [Note] InnoDB: Memory barrier is not used
+2016-01-17 20:53:31 2908 [Note] InnoDB: Compressed tables use zlib 1.2.6
+2016-01-17 20:53:31 2908 [Note] InnoDB: Using CPU crc32 instructions
+2016-01-17 20:53:31 2908 [Note] InnoDB: Initializing buffer pool, size = 128.0M
+2016-01-17 20:53:31 2908 [Note] InnoDB: Completed initialization of buffer pool
+2016-01-17 20:53:31 2908 [Note] InnoDB: Highest supported file format is Barracuda.
+2016-01-17 20:53:31 2908 [Note] InnoDB: The log sequence numbers 347635375 and 347635375 in ibdata files do not match the log sequence number 1623996729 in the ib_logfiles!
+2016-01-17 20:53:31 2908 [Note] InnoDB: Database was not shutdown normally!
+2016-01-17 20:53:31 2908 [Note] InnoDB: Starting crash recovery.
+2016-01-17 20:53:31 2908 [Note] InnoDB: Reading tablespace information from the .ibd files...
+2016-01-17 20:53:31 2908 [Note] InnoDB: Restoring possible half-written data pages 
+2016-01-17 20:53:31 2908 [Note] InnoDB: from the doublewrite buffer...
+2016-01-17 20:53:31 2908 [Note] InnoDB: 128 rollback segment(s) are active.
+2016-01-17 20:53:31 2908 [Note] InnoDB: Waiting for purge to start
+2016-01-17 20:53:31 2908 [Note] InnoDB: 5.6.26 started; log sequence number 1623996729
+2016-01-17 20:53:31 2908 [Note] RSA private key file not found: /Applications/drupal-7.41-1/mysql/data//private_key.pem. Some authentication plugins will not work.
+2016-01-17 20:53:31 2908 [Note] RSA public key file not found: /Applications/drupal-7.41-1/mysql/data//public_key.pem. Some authentication plugins will not work.
+2016-01-17 20:53:31 2908 [Note] Server hostname (bind-address): '127.0.0.1'; port: 3308
+2016-01-17 20:53:31 2908 [Note]   - '127.0.0.1' resolves to '127.0.0.1';
+2016-01-17 20:53:31 2908 [Note] Server socket created on IP: '127.0.0.1'.
+2016-01-17 20:53:31 2908 [Note] Event Scheduler: Loaded 0 events
+2016-01-17 20:53:31 2908 [Note] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin: ready for connections.
+Version: '5.6.26'  socket: '/Applications/drupal-7.41-1/mysql/tmp/mysql.sock'  port: 3308  Source distribution
+160120 08:03:02 mysqld_safe Starting mysqld.bin daemon with databases from /Applications/drupal-7.41-1/mysql/data
+2016-01-20 08:03:03 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).
+2016-01-20 08:03:03 0 [Note] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin (mysqld 5.6.26) starting as process 1089 ...
+2016-01-20 08:03:03 1089 [Note] Plugin 'FEDERATED' is disabled.
+2016-01-20 08:03:03 1089 [Note] InnoDB: Using atomics to ref count buffer pool pages
+2016-01-20 08:03:03 1089 [Note] InnoDB: The InnoDB memory heap is disabled
+2016-01-20 08:03:03 1089 [Note] InnoDB: Mutexes and rw_locks use GCC atomic builtins
+2016-01-20 08:03:03 1089 [Note] InnoDB: Memory barrier is not used
+2016-01-20 08:03:03 1089 [Note] InnoDB: Compressed tables use zlib 1.2.6
+2016-01-20 08:03:03 1089 [Note] InnoDB: Using CPU crc32 instructions
+2016-01-20 08:03:03 1089 [Note] InnoDB: Initializing buffer pool, size = 128.0M
+2016-01-20 08:03:03 1089 [Note] InnoDB: Completed initialization of buffer pool
+2016-01-20 08:03:03 1089 [Note] InnoDB: Highest supported file format is Barracuda.
+2016-01-20 08:03:03 1089 [Note] InnoDB: The log sequence numbers 347635375 and 347635375 in ibdata files do not match the log sequence number 1892755720 in the ib_logfiles!
+2016-01-20 08:03:03 1089 [Note] InnoDB: Database was not shutdown normally!
+2016-01-20 08:03:03 1089 [Note] InnoDB: Starting crash recovery.
+2016-01-20 08:03:03 1089 [Note] InnoDB: Reading tablespace information from the .ibd files...
+2016-01-20 08:03:03 1089 [Note] InnoDB: Restoring possible half-written data pages 
+2016-01-20 08:03:03 1089 [Note] InnoDB: from the doublewrite buffer...
+2016-01-20 08:03:04 1089 [Note] InnoDB: 128 rollback segment(s) are active.
+2016-01-20 08:03:04 1089 [Note] InnoDB: Waiting for purge to start
+2016-01-20 08:03:04 1089 [Note] InnoDB: 5.6.26 started; log sequence number 1892755720
+2016-01-20 08:03:04 1089 [Note] RSA private key file not found: /Applications/drupal-7.41-1/mysql/data//private_key.pem. Some authentication plugins will not work.
+2016-01-20 08:03:04 1089 [Note] RSA public key file not found: /Applications/drupal-7.41-1/mysql/data//public_key.pem. Some authentication plugins will not work.
+2016-01-20 08:03:04 1089 [Note] Server hostname (bind-address): '127.0.0.1'; port: 3308
+2016-01-20 08:03:04 1089 [Note]   - '127.0.0.1' resolves to '127.0.0.1';
+2016-01-20 08:03:04 1089 [Note] Server socket created on IP: '127.0.0.1'.
+2016-01-20 08:03:04 1089 [Note] Event Scheduler: Loaded 0 events
+2016-01-20 08:03:04 1089 [Note] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin: ready for connections.
+Version: '5.6.26'  socket: '/Applications/drupal-7.41-1/mysql/tmp/mysql.sock'  port: 3308  Source distribution

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+. /Applications/drupal-7.41-1/scripts/setenv.sh
+
+exec /Applications/drupal-7.41-1/sqlite/bin/.sqlite3.bin  "$@"

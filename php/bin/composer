@@ -1,0 +1,4 @@
+#!/bin/sh
+. /Applications/drupal-7.41-1/php/../scripts/setenv.sh
+
+exec /Applications/drupal-7.41-1/php/bin/composer.phar "$@"
