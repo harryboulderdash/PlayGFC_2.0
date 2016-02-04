@@ -3,6 +3,7 @@
 
 AVAILABLE FIELDS:
 
+
 [title] == Content: Title
 [field_match_team_1] == Content: Match Team 1
 [field_match_team_1_score] == Content: Match Team 1 Score
@@ -51,8 +52,11 @@ AVAILABLE FIELDS:
 [uuid_1] == User: User UUID
 [field_xbox_gamertag_1] == User: Xbox Gamertag
 [field_youtube_link_1] == User: YouTube Channel
-[field_youtube_link_1-value] == Raw value
-[field_youtube_link_1-format] == Raw format
+[field_tournament_status] == Content: Tournament Status
+[field_match_status] == Content: Match Status
+[field_match_status-value] == Raw value
+%1 == Content: Match Challonge ID (field_match_challonge_id) title
+!1 == Content: Match Challonge ID (field_match_challonge_id) input
 
 
 */
@@ -187,54 +191,5 @@ AVAILABLE FIELDS:
 USER, Gamertag, Social Media, Eligability
 -->
 
-<br><br>
+<?php //print views_embed_view('match_team_details','block'); ?>
 
-<div class="row">
-<div id="forum">
-    <div class="col-md-6">
-        <table>
-            <thead>
-            <tr style="background-color: yellow">
-                <th align="left" colspan="4" style="background-color: goldenrod"><?php print $fields['field_team_name']->content; ?>Team Roster</th>
-            </tr>
-            <tr>
-                <th>User</th><th>Gamertag</th><th>Social Media</th><th>Elegibiliy</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td><?php print $fields['field_team_member_user_1']->content; ?></td><td>__dudeone__</td><td>icons/links</td><td>status light</td>
-            </tr>
-            <tr>
-                <td>Dude1</td><td>__dudeone__</td><td>icons/links</td><td>status light</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-</div>
-
-<div class="row">
-<div id="forum">
-    <div class="col-md-6">
-        <table>
-            <thead>
-            <tr style="background-color: yellow">
-                <th align="left" colspan="4" style="background-color: goldenrod"><?php print $fields['field_team_name_1']->content; ?> Team Roster</th>
-            </tr>
-            <tr>
-                <th>User</th><th>Gamertag</th><th>Social Media</th><th>Elegibiliy</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>Dude1</td><td>__dudeone__</td><td>icons/links</td><td>status light</td>
-            </tr>
-            <tr>
-                <td>Dude1</td><td>__dudeone__</td><td>icons/links</td><td>status light</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-</div>
