@@ -73,15 +73,20 @@ AVAILABLE FIELDS:
 
                     <div class="circled">
                         <div class="circled-inner">
-                            <i class="fa fa-group fa-5x" style="color:goldenrod; padding: 10px">
+                            <i class="fa fa-group fa-5x" style="color:white; padding: 10px">
                                 <span class="price">
                                     <small>
+
                                         <?php
-                                        if(!$fields['field_match_status']->content = "Scores Reported"){
+                                        $status = $fields['field_match_status']->content;
+                                        $score1 = $fields['field_match_team_1_score']->content;
+                                        $score2 = $fields['field_match_team_2_score']->content;
+
+                                        if(!($status == "Scores Reported")){
                                             Print 'TBD';
                                         }
-                                        elseif($fields['field_match_team_1_score']->content > $fields['field_match_team_2_score']->content){print 'Win';}
-                                        elseif($fields['field_match_team_2_score']->content > $fields['field_match_team_1_score']->content){print 'Loss';}
+                                        elseif($score1 > $score2){print 'Win: '. $score1;}
+                                        elseif($score2 > $score1){print 'Loss: '. $score1;}
 
                                         ?>
 
@@ -93,10 +98,10 @@ AVAILABLE FIELDS:
                     </div>
                     <h3 style="color: #000000;"><?php print $fields['field_team_name']->content; ?></h3>
                 </header>
-                <div class="pricing-body" align="left">
+                <div class="pricing-body" align="left" style="font-size: 13px;font-family: 'Oswald', sans-serif;margin: 0 0 0 0;">
                     <ul>
-                        <li>Wins:</li>
-                        <li>Losses:</li>
+                        <li>Wins: <?php print $fields['field_team_wins']->content; ?></li>
+                        <li>Losses: <?php print $fields['field_team_losses']->content; ?></li>
                     </ul>
                 </div>
 
@@ -107,39 +112,39 @@ AVAILABLE FIELDS:
 
         <div class="col-md-2">
 
-            <div style="color:black;font-size: xx-large;text-align: center;">
-                <i class="fa fa-hand-o-left " style="color: goldenrod"></i>
-                    &nbsp;&nbsp;Vs.&nbsp;&nbsp;
-                <i class="fa fa-hand-o-right" style="color: goldenrod"></i>
+            <div style="color:black;font-size: xx-large;text-align: center;margin: -1em 0 0 0 ">
+                <i class="fa fa-hand-o-left " style="color: black"></i>
+                &nbsp;&nbsp;Vs.&nbsp;&nbsp;
+                <i class="fa fa-hand-o-right" style="color: black"></i>
             </div>
 
-            <div class="plan style3" style="background-color:black;padding: 2px;border-width: 2px;border-color: goldenrod">
+            <div class="plan style3" style="background-color:lightgrey;padding: 2px;border-width: 2px;border-color: goldenrod">
                 <div class="row" align="top">
-                    <small style="color:white;">Status:<br> <b><?php print $fields['field_match_status']->content; ?></b></small>
+                    <div style="color:black;font-size: 13px;font-family: 'Oswald', sans-serif;margin: 1em 0 0 0;">Status: &nbsp; <?php print $status; ?></div>
                 </div>
 
                 <div class="row" align="left" style="padding-left: 20px">
                     <p></p>
                     <h5 style="color:goldenrod">Maps:</h5>
-                    <small style="color:white;">
+                    <div style="font-size: 13px;font-family: 'Oswald', sans-serif;margin: 0 0 0 0;">
                         <?php
-                            //turn maps string into array and iterate them onto page
-                            $maps = str_getcsv($fields['field_match_maps']->content);
+                        //turn maps string into array and iterate them onto page
+                        $maps = str_getcsv($fields['field_match_maps']->content);
 
-                            foreach($maps as $map){
-                                print $map . '<br>';
-                            }
+                        foreach($maps as $map){
+                            print $map . '<br>';
+                        }
                         ?>
-                    </small>
+                    </div>
                     <br>
                     <h5 style="color:goldenrod">Hosts:</h5>
-                    <small style="color:white;">
+                    <div style="font-size: 13px;font-family: 'Oswald', sans-serif;margin: 0 0 0 0;">
                         <?php
                         print $fields['field_team_name']->content . '<br>';
                         print $fields['field_team_name_1']->content . '<br>';
                         print 'TBD';
                         ?>
-                    </small>
+                    </div>
                 </div>
             </div>
         </div>
@@ -157,11 +162,12 @@ AVAILABLE FIELDS:
                                 <span class="price">
                                     <small>
                                         <?php
-                                        if(!$fields['field_match_status']->content = "Scores Reported"){
+
+                                        if(!($status == "Scores Reported")){
                                             Print 'TBD';
                                         }
-                                        elseif($fields['field_match_team_1_score']->content < $fields['field_match_team_2_score']->content){print 'Win';}
-                                        elseif($fields['field_match_team_2_score']->content < $fields['field_match_team_1_score']->content){print 'Loss';}
+                                        elseif($score1 > $score2){print 'Loss: '. $score2;}
+                                        elseif($score2 > $score1){print 'Win: '. $score2;}
 
                                         ?>
 
@@ -173,10 +179,10 @@ AVAILABLE FIELDS:
                     </div>
                     <h3 style="color: #000;"><?php print $fields['field_team_name_1']->content; ?></h3>
                 </header>
-                <div class="pricing-body" align="left">
+                <div class="pricing-body" align="left" style="font-size: 13px;font-family: 'Oswald', sans-serif;margin: 0 0 0 0;">
                     <ul>
-                        <li>Wins:</li>
-                        <li>Losses:</li>
+                        <li>Wins: <?php print $fields['field_team_wins']->content; ?></li>
+                        <li>Losses: <?php print $fields['field_team_losses']->content; ?></li>
                     </ul>
                 </div>
 
@@ -191,5 +197,4 @@ AVAILABLE FIELDS:
 USER, Gamertag, Social Media, Eligability
 -->
 
-<?php //print views_embed_view('match_team_details','block'); ?>
 
