@@ -20,7 +20,7 @@ function UpdateScoresForm_callback($ajax) {
 
         $form_state = array(
             'ajax' => TRUE,
-            'title' => t('Report Match Scores'),
+            'title' => t('Report Map Results'),
         );
 
         //get url segments
