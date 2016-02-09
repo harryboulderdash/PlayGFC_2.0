@@ -62,13 +62,44 @@ AVAILABLE FIELDS:
 */
 ?>
 
+<?php
+
+ ctools_include('modal');
+    ctools_include('ajax');
+    ctools_modal_add_js();
+    ctools_add_js('ajax-responder');
+
+
+$sample_style = array(
+    'ctools-sample-style' => array(
+        'modalSize' => array(
+            'type' => 'fixed',
+            'width' => 450,
+            'height' => 400,
+            'addWidth' => 1,
+            'addHeight' => 0,
+        ),
+        'modalOptions' => array(
+            'opacity' => .5,
+            'background-color' => '#000',
+        ),
+        'animation' => 'fadeIn',
+    ),
+);
+
+  drupal_add_js($sample_style, 'setting');
+
+
+?>
+
+
 
 <div class="row">
     <div class="pricing-table pricing-table__style3">
 
         <!-- Team One Section-->
         <div class="col-md-2">
-            <div class="plan popular style3" style="border-width: 2px;border-color: grey">
+            <div class="plan popular style3" style="border-width: 1px;border-color: grey">
                 <header class="pricing-head">
 
                     <div class="circled">
@@ -112,13 +143,13 @@ AVAILABLE FIELDS:
 
         <div class="col-md-2">
 
-            <div style="color:black;font-size: xx-large;text-align: center;margin: -1em 0 0 0 ">
-                <i class="fa fa-hand-o-left " style="color: black"></i>
-                &nbsp;&nbsp;Vs.&nbsp;&nbsp;
-                <i class="fa fa-hand-o-right" style="color: black"></i>
+            <div style="color:grey;font-size: 20px;text-align: center;margin: -1em 0 0 0 ;font-family: 'Oswald', sans-serif;">
+                <i class="fa fa-hand-o-left fa-lg " style="color: grey"></i>
+                &nbsp;&nbsp;&nbsp;&nbsp;Vs.&nbsp;&nbsp;&nbsp;&nbsp;
+                <i class="fa fa-hand-o-right fa-lg" style="color: grey"></i>
             </div>
 
-            <div class="plan style3" style="background-color:lightgrey;padding: 2px;border-width: 2px;border-color: goldenrod">
+            <div class="plan style3" style="background-color:lightgrey;padding: 1px;border-width: 2px;border-color: goldenrod">
                 <div class="row" align="top">
                     <div style="color:black;font-size: 13px;font-family: 'Oswald', sans-serif;margin: 1em 0 0 0;">Status: &nbsp; <?php print $status; ?></div>
                 </div>
@@ -153,7 +184,7 @@ AVAILABLE FIELDS:
         <!-- Team 2 section-->
 
         <div class="col-md-2">
-            <div class="plan popular style3" style="border-width: 2px;border-color: grey">
+            <div class="plan popular style3" style="border-width: 1px;border-color: grey">
                 <header class="pricing-head">
 
                     <div class="circled">
@@ -189,12 +220,16 @@ AVAILABLE FIELDS:
             </div>
         </div>
 
-
     </div>
 </div>
 
 <!--
 USER, Gamertag, Social Media, Eligability
+
 -->
+    <?php print views_embed_view('my_matches_99','block_1'); ?>
+
+    <?php print views_embed_view('match_team_details','block'); ?>
+    <?php print views_embed_view('match_team_2_details','block'); ?>
 
 
