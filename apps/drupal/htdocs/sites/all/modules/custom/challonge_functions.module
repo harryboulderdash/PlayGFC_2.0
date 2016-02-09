@@ -358,6 +358,11 @@ function StartTournament($tournamentid){
                 $emw->field_match_team_2->set((integer)$team2);
                 $emw->field_match_status->set("Ready For Play");
 
+                //add teams to teams field so they are all in one place for convenient reads.
+                //field_match_teams_all
+                $emw->field_match_teams_all[] = (integer)$team1;
+                $emw->field_match_teams_all[] = (integer)$team2;
+
                 //field_match_maps‎
                 $emw->field_match_maps->set((string)$mapsCSV);
             }
@@ -365,17 +370,16 @@ function StartTournament($tournamentid){
 
             //save it out
             $emw->save();
+
+            //add to tournament
+            $tourneywrapper->field_tournament_match[] = $emw->nid->value();
+
+            $tourneywrapper->save();
+
+            //clear team id's for matches where participants are not yet known.
+            $team1 = 0;
+            $team2 = 0;
         }
-
-
-
-        //add to tournament
-        $tourneywrapper->field_tournament_match[] = $emw->nid->value();
-        $tourneywrapper->save();
-
-        //clear team id's for matches where participants are not yet known.
-        $team1 = 0;
-        $team2 = 0;
 
         //Save new URL value to GFC
         $tourneywrapper->field_tournament_status->set("Started");
@@ -522,6 +526,12 @@ function UpdateMatchesDataFromAPI($tournament_id)
             if ((integer)$match->{'player1-id'} != 0 && (integer)$match->{'player2-id'} != 0) {
                 $emw->field_match_team_1->set((integer)$team1);
                 $emw->field_match_team_2->set((integer)$team2);
+
+                //add teams to teams field so they are all in one place for convenient reads.
+                //field_match_teams_all
+                $emw->field_match_teams_all[] = (integer)$team1;
+                $emw->field_match_teams_all[] = (integer)$team2;
+
                 //if match was pending and now ready update status, don't update for matches in progress or completed
                 if ($emw->field_match_status->value() == "Pending Prior Round") {
                     $emw->field_match_status->set("Ready For Play");
@@ -555,6 +565,7 @@ function UpdateMatchesDataFromAPI($tournament_id)
 function UpdateMatchResult($tournament_id, $match_id, $team_1_score, $team_2_score, $isDisputed = 0){
     include_once DRUPAL_ROOT . '/includes/challonge.class.php';
 
+    //TODO: Capture info about the user reporting the scores.
     //UpdateMatchResult(30,35,2,1,31);
 
     try {
@@ -1100,6 +1111,7 @@ function StartTournamentButtonContextBased($user,$tournamentID){
 
 
     $roleid = 3; //admin role
+    $output = '';
 
     if(user_has_role($roleid, $user)) {
     //yes this user has this role, now check tournament status
