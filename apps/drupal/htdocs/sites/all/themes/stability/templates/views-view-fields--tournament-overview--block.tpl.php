@@ -81,7 +81,7 @@ Tournament Status	            field_tournament_status	List
             <td><strong>Start Time:</strong> <?php print $fields['field_tournament_time']->content; ?></td>
             <td><strong>Min Team Size:</strong> <?php print $fields['field_minimum_team_size']->content; ?></td>
             <td rowspan="3" class="pull-right">
-                <a class="btn btn-default" value="View Bracket" href="<?php print '/node/493/' . $fields['field_tournament_challonge_url']->content . '#tab-2'; ?>"><i class="fa fa-dashboard fa-lg"></i> &nbsp; View Bracket</a>
+                <a class="btn btn-default" value="View Bracket" href="#tab-2" data-toggle="tab"><i class="fa fa-dashboard fa-lg"></i> &nbsp; View Bracket</a>
             </td>
         </tr>
         <tr>
