@@ -467,4 +467,14 @@ jQuery(function($){
       });
     };
 
+    /* ----------------------------------------------------------- */
+    /*  13. link directly to tab
+     /* ----------------------------------------------------------- */
+    $(function(){
+        $(document).on('click.bs.tab.data-api', '[data-toggle="tab"], [data-toggle="pill"]', function (e) {
+            e.preventDefault()
+            $('ul.nav li a[href="' + $(this).attr('href') + '"]').tab('show');
+        })
+    });
+
 });
