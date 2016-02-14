@@ -80,7 +80,12 @@ function manage_teams_form_block_view($delta = '') {
 
 function manage_teams_form_form($form, &$form_state) {
 
-    if(!user_is_logged_in()){drupal_goto('/user');}
+    if(!user_is_logged_in()){
+
+        $options = array('query' => array('destination' =>  current_path()));
+        drupal_goto('/user', $options);
+
+        }
 
     if(gfc_session("current_team"))
     {
