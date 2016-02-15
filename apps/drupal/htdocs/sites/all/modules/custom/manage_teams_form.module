@@ -261,14 +261,9 @@ function manage_teams_form_addPlayer_form($form, &$form_state)
 
 }
 
-function manage_teams_form_removeMember_form($form,&$form_state, $member_id) {
-    //get url segments count to retrieve tid and mid variables with
-
-    $count = count($form_state['build_info']['args']);
-    $value = $form_state['build_info']['args'][0];
+function manage_teams_form_removeMember_form($form,&$form_state, $member_id,$username) {
 
     return array(
-
 
         'memberid' => array(
             '#type' => 'hidden',
@@ -276,16 +271,17 @@ function manage_teams_form_removeMember_form($form,&$form_state, $member_id) {
             '#value' => $member_id,
         ),
 
+        'username' => array(
+            '#type' => 'hidden',
+            '#required' => TRUE,
+            '#value' => $username,
+        ),
+
         'submit' => array(
             '#type' => 'submit',
-            //'#value' => $member_id,
             '#value' => t('Remove'),
-            '#ajax' => array(
-                'callback' => 'demo_form_ajax_submit',
-                'wrapper' => 'demo-demo-form',
-                'method' => 'replace',
-                'effect' => 'fade',
-            ),
+
+
         ),
     );
 }
@@ -294,22 +290,27 @@ function manage_teams_form_removeMember_form($form,&$form_state, $member_id) {
 /**
  * Ajax callback function for REMOVE TEAM MEMBER.
  */
-function remove_member_ajax_submit($form, $form_state) {
+function manage_teams_form_removeMember_form_submit($form, $form_state) {
 
-    ctools_include('ajax');
-    ctools_add_js('ajax-responder');
+   // ctools_include('ajax');
+   //ctools_add_js('ajax-responder');
 
     if (!empty($form_state['input']['memberid'])) {
         $nid = $form_state['input']['memberid'];
+        $username = $form_state['input']['username'];
+
         RemovePlayerFromTeam($nid);
 
+        //display success message
+        drupal_set_message(t($username . ' Removed from Roster'));
+
         //refresh page to reflect change
-       $commands[] = ajax_command_invoke('.view-id-roster2', 'trigger', array('RefreshView'));
-        $commands[] = ctools_ajax_command_reload();
+       //$commands[] = ajax_command_invoke('.view-id-roster2', 'trigger', array('RefreshView'));
+       // $commands[] = ctools_ajax_command_reload();
 
         // Return the ajax instructions to the browser via ajax_render().
-        print     ctools_ajax_render($commands);
-        drupal_exit();
+        //print     ctools_ajax_render($commands);
+        //drupal_exit();
     }
 }
 
