@@ -25,10 +25,74 @@ function manage_teams_form_menu() {
         'page arguments' => array('manage_teams_form_form'), //put the name of the form here
         'access callback' => TRUE
     );
+
+    $items['team-member-manage/%ctools_js/remove'] = array (
+        'title' => 'Remove Team Member',
+        'page callback' => 'team_member_remove_callback',
+        'page_arguments' => array(1),
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
     return
 
         $items;
 }
+
+function team_member_remove_callback($ajax){
+
+try{
+        if ($ajax) {
+
+            //get url segments
+            $urlArray = explode('/', request_uri());
+            //get url segments count to retrieve tid and mid variables with
+            $count = count($urlArray);
+
+            //grab the value of the last section, which should be the nid of the team member record
+            $nid =  $urlArray[$count-1];
+
+            //get user object to check if user is logged in
+            global $user;
+
+            //make sure authenticated user is making the request
+            if($user->uid){
+            //call remove player function, passing in nid
+            RemovePlayerFromTeam($nid);
+            }
+
+
+            //$output = ctools_ajax_command_reload();
+            // Return the ajax instructions to the browser via ajax_render().
+            //print ajax_render($output);
+           //drupal_exit();
+
+            $commands = array();
+
+            $commands[] = ajax_command_invoke('.view-id-roster2', 'trigger', array('RefreshView'));
+
+           // $commands[] = ctools_ajax_command_reload();
+            ajax_deliver(array(
+                '#type' => 'ajax',
+                '#commands' => $commands,
+            ));
+
+
+           // ajax_deliver(array('#type' => 'ajax', '#commands' => $commands));
+
+            //return ajax_render($commands);
+
+            //$commands[] = ajax_command_invoke('.view-id-XXX', 'trigger', array('RefreshView'));
+
+
+        }
+    }
+    //exception handler
+         catch (Exception $e) {
+        _watchdog_log($e->getMessage());
+    }
+
+}
+
 
 function manage_teams_form_help($path, $arg) {
 
@@ -195,6 +259,52 @@ function manage_teams_form_addPlayer_form($form, &$form_state)
 
     return $form;
 
+}
+
+function manage_teams_form_remove_form($form,&$form_state, $member_id) {
+    //get url segments count to retrieve tid and mid variables with
+
+    $count = count($form_state['build_info']['args']);
+    $value = $form_state['build_info']['args'][0];
+
+    return array(
+
+
+        'memberid' => array(
+            '#type' => 'hidden',
+            '#required' => TRUE,
+            '#value' => $member_id,
+        ),
+
+        'submit' => array(
+            '#type' => 'submit',
+            //'#value' => $member_id,
+            '#value' => t('Subscribe'),
+            '#ajax' => array(
+                'callback' => 'demo_form_ajax_submit',
+                'wrapper' => 'demo-demo-form',
+                'method' => 'replace',
+                'effect' => 'fade',
+            ),
+        ),
+    );
+}
+
+
+/**
+ * Ajax callback function for REMOVE TEAM MEMBER.
+ */
+function remove_member_ajax_submit($form, $form_state) {
+    // Dummy/dumb validation for demo purpose.
+    if (!empty($form_state['input']['memberid'])) {
+        $nid = $form_state['input']['memberid'];
+        RemovePlayerFromTeam($nid);
+    }
+
+    else {
+        //return $form;
+        return 'Sent this';
+    }
 }
 
 function manage_teams_form_form_validate($form, &$form_state) {
