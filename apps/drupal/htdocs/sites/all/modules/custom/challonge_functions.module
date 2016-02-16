@@ -25,6 +25,8 @@ function _watchdog_log($error, $object = NULL, $backtrace = FALSE) {
 
 //Taxon IDs
 define('CAPTAIN_ROLE', '69');
+define('MEMBER_REMOVED_STATUS','112');
+
 
 function createGFCTournament($mynodeidparent) {
     include_once DRUPAL_ROOT . '/includes/challonge.class.php';
@@ -637,8 +639,8 @@ function UpdateMatchResult($tournament_id, $match_id, $team_1_score, $team_2_sco
 function GetWrapperByEntityID($nid){
 
     //make updates to GFC data first
-    $node = node_load($nid);
-    $wrapper = entity_metadata_wrapper('node',$node);
+    //$node = node_load($nid);
+    $wrapper = entity_metadata_wrapper('node',$nid);
 
     return $wrapper;
 }
@@ -1047,7 +1049,7 @@ function AddPlayerToTeam($teamID, $userID, $roleID, $inviteAccepted){
 
 }
 
-function RemovePlayerFromTeam($teamID, $userID, $roleID){
+function RemovePlayerFromTeam($entityID){
 
     /*
      *
@@ -1055,7 +1057,7 @@ function RemovePlayerFromTeam($teamID, $userID, $roleID){
      * Remove a player from the team
      * If the player happens to have accepted invite...
      * that's okay because when tournament starts
-     * only those in the team at the MOMENT it starts will have their credits removed permanently
+     * only those in the team (having status ACTIVE) at the MOMENT it starts will have their credits removed permanently
      *
      *
      * */
@@ -1063,18 +1065,13 @@ function RemovePlayerFromTeam($teamID, $userID, $roleID){
 
     try {
 
-        //create team members entity and wrap it
-        $entity = entity_create('team_members', array('type' => 'team_members'));
-        $emw = entity_metadata_wrapper('team_members', $entity);
+        $emw = entity_metadata_wrapper('team_members', $entityID);
+        $emw->field_team_member_status = MEMBER_REMOVED_STATUS;
+        $emw->save();
 
-        //set field values
-        $emw->field_team_reference_from_team_m = $teamID;
-        $emw->field_team_member_role = $roleID; //captain taxonomy ID TODO, need to get this dynamically
-        $emw->field_team_member_user = $userID;
 
-        //TODO: FIND THE REMOVE FUNCTION FOR EMW and call for this item.
-        //save it out
-        //$emw->save();
+        //code to actually delete member
+        //entity_delete('team_members', $entityID);
 
         //exception handler
     } catch (Exception $e) {

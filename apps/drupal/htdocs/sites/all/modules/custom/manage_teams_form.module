@@ -279,10 +279,9 @@ function manage_teams_form_removeMember_form($form,&$form_state, $member_id,$use
 
         'submit' => array(
             '#type' => 'submit',
-            '#value' => t('Remove'),
-
-
+            '#value' => 'Remove',
         ),
+
     );
 }
 

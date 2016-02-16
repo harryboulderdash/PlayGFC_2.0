@@ -7,6 +7,14 @@
 
  /**
   * Implements hook_menu().
+  *
+  *
+  *
+  *
+  * how to use the callback without a form
+  * http://www.seanbuscay.com/ajax-reader-demo/
+  *
+  *
   */
 function demo_menu() {
     return array(
@@ -22,18 +30,26 @@ function demo_menu() {
  /**
   * A simple newsletter subscribe form.
   */
-function demo_demo_form($form, &$form_state) {
+function demo_demo_form($form,&$form_state, $member_id) {
+    //get url segments count to retrieve tid and mid variables with
+
+    $count = count($form_state['build_info']['args']);
+    $value = $form_state['build_info']['args'][0];
+
+
+
     return array(
-        'email' => array(
-            '#type' => 'textfield',
-            '#title' => t('Join our Newsletter'),
+
+
+        'memberid' => array(
+            '#type' => 'hidden',
             '#required' => TRUE,
-            '#attributes' => array(
-                'placeholder' => t('mail@example.com'),
-            ),
+            '#value' => $member_id,
         ),
+
         'submit' => array(
             '#type' => 'submit',
+            //'#value' => $member_id,
             '#value' => t('Subscribe'),
             '#ajax' => array(
                 'callback' => 'demo_form_ajax_submit',
@@ -50,10 +66,13 @@ function demo_demo_form($form, &$form_state) {
  */
 function demo_form_ajax_submit($form, $form_state) {
     // Dummy/dumb validation for demo purpose.
-    if (!empty($form_state['input']['email'])) {
-        return 'Subscribed !';
+    if (!empty($form_state['input']['memberid'])) {
+        $nid = $form_state['input']['memberid'];
+        RemovePlayerFromTeam($nid);
     }
+
     else {
-        return $form;
+        //return $form;
+        return 'Sent this';
     }
 }

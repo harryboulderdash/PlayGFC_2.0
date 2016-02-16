@@ -35,7 +35,7 @@ PS GAMERTAG	LOGO	ROLE	USERNAME	TEAM MEMBER ENTITY ID
             <table>
                 <thead>
                 <tr>
-                    <th>Gamertag</th><th>Role</th><th>Username</th><th>Status</th><th>Remove</th>
+                    <th>Gamertag</th><th>Role</th><th>Username</th><th>Status</th><th></th>
                 </tr>
                 </thead>
                 <tbody>

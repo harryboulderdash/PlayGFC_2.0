@@ -2414,3 +2414,17 @@ hr.double {
   padding-left: 5px;
   padding-right: 5px;
 }
+
+/*
+
+Font Awesome definition
+
+
+*/
+.block-search input[type="submit"]{
+  border: 0;
+  font-size: 1.3em;
+  vertical-align: top;
+  margin-left: -45px;
+  font-family: 'FontAwesome';
+}

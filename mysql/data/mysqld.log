@@ -654,3 +654,192 @@ Version: '5.6.26'  socket: '/Applications/drupal-7.41-1/mysql/tmp/mysql.sock'  p
 2016-01-20 08:03:04 1089 [Note] Event Scheduler: Loaded 0 events
 2016-01-20 08:03:04 1089 [Note] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin: ready for connections.
 Version: '5.6.26'  socket: '/Applications/drupal-7.41-1/mysql/tmp/mysql.sock'  port: 3308  Source distribution
+2016-02-08 18:42:49 1089 [Note] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin: Normal shutdown
+
+2016-02-08 18:42:49 1089 [Note] Giving 0 client threads a chance to die gracefully
+2016-02-08 18:42:49 1089 [Note] Event Scheduler: Purging the queue. 0 events
+2016-02-08 18:42:49 1089 [Note] Shutting down slave threads
+2016-02-08 18:42:49 1089 [Note] Forcefully disconnecting 0 remaining clients
+2016-02-08 18:42:49 1089 [Note] Binlog end
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'partition'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'PERFORMANCE_SCHEMA'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_SYS_DATAFILES'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_SYS_TABLESPACES'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_SYS_FOREIGN_COLS'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_SYS_FOREIGN'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_SYS_FIELDS'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_SYS_COLUMNS'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_SYS_INDEXES'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_SYS_TABLESTATS'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_SYS_TABLES'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_FT_INDEX_TABLE'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_FT_INDEX_CACHE'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_FT_CONFIG'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_FT_BEING_DELETED'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_FT_DELETED'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_FT_DEFAULT_STOPWORD'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_METRICS'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_BUFFER_POOL_STATS'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_BUFFER_PAGE_LRU'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_BUFFER_PAGE'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_CMP_PER_INDEX_RESET'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_CMP_PER_INDEX'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_CMPMEM_RESET'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_CMPMEM'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_CMP_RESET'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_CMP'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_LOCK_WAITS'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_LOCKS'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'INNODB_TRX'
+2016-02-08 18:42:49 1089 [Note] Shutting down plugin 'InnoDB'
+2016-02-08 18:42:49 1089 [Note] InnoDB: FTS optimize thread exiting.
+2016-02-08 18:42:49 1089 [Note] InnoDB: Starting shutdown...
+2016-02-08 18:42:50 1089 [Note] InnoDB: Shutdown completed; log sequence number 4930682896
+2016-02-08 18:42:50 1089 [Note] Shutting down plugin 'BLACKHOLE'
+2016-02-08 18:42:50 1089 [Note] Shutting down plugin 'ARCHIVE'
+2016-02-08 18:42:50 1089 [Note] Shutting down plugin 'MRG_MYISAM'
+2016-02-08 18:42:50 1089 [Note] Shutting down plugin 'MyISAM'
+2016-02-08 18:42:50 1089 [Note] Shutting down plugin 'MEMORY'
+2016-02-08 18:42:50 1089 [Note] Shutting down plugin 'CSV'
+2016-02-08 18:42:50 1089 [Note] Shutting down plugin 'sha256_password'
+2016-02-08 18:42:50 1089 [Note] Shutting down plugin 'mysql_old_password'
+2016-02-08 18:42:50 1089 [Note] Shutting down plugin 'mysql_native_password'
+2016-02-08 18:42:50 1089 [Note] Shutting down plugin 'binlog'
+2016-02-08 18:42:50 1089 [Note] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin: Shutdown complete
+
+160208 20:16:58 mysqld_safe Starting mysqld.bin daemon with databases from /Applications/drupal-7.41-1/mysql/data
+2016-02-08 20:16:59 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).
+2016-02-08 20:16:59 0 [Note] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin (mysqld 5.6.26) starting as process 1443 ...
+2016-02-08 20:16:59 1443 [Note] Plugin 'FEDERATED' is disabled.
+2016-02-08 20:16:59 1443 [Note] InnoDB: Using atomics to ref count buffer pool pages
+2016-02-08 20:16:59 1443 [Note] InnoDB: The InnoDB memory heap is disabled
+2016-02-08 20:16:59 1443 [Note] InnoDB: Mutexes and rw_locks use GCC atomic builtins
+2016-02-08 20:16:59 1443 [Note] InnoDB: Memory barrier is not used
+2016-02-08 20:16:59 1443 [Note] InnoDB: Compressed tables use zlib 1.2.6
+2016-02-08 20:16:59 1443 [Note] InnoDB: Using CPU crc32 instructions
+2016-02-08 20:16:59 1443 [Note] InnoDB: Initializing buffer pool, size = 128.0M
+2016-02-08 20:16:59 1443 [Note] InnoDB: Completed initialization of buffer pool
+2016-02-08 20:16:59 1443 [Note] InnoDB: Highest supported file format is Barracuda.
+2016-02-08 20:16:59 1443 [Note] InnoDB: 128 rollback segment(s) are active.
+2016-02-08 20:16:59 1443 [Note] InnoDB: Waiting for purge to start
+2016-02-08 20:16:59 1443 [Note] InnoDB: 5.6.26 started; log sequence number 4930682896
+2016-02-08 20:16:59 1443 [Note] RSA private key file not found: /Applications/drupal-7.41-1/mysql/data//private_key.pem. Some authentication plugins will not work.
+2016-02-08 20:16:59 1443 [Note] RSA public key file not found: /Applications/drupal-7.41-1/mysql/data//public_key.pem. Some authentication plugins will not work.
+2016-02-08 20:16:59 1443 [Note] Server hostname (bind-address): '127.0.0.1'; port: 3308
+2016-02-08 20:16:59 1443 [Note]   - '127.0.0.1' resolves to '127.0.0.1';
+2016-02-08 20:16:59 1443 [Note] Server socket created on IP: '127.0.0.1'.
+2016-02-08 20:16:59 1443 [Note] Event Scheduler: Loaded 0 events
+2016-02-08 20:16:59 1443 [Note] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin: ready for connections.
+Version: '5.6.26'  socket: '/Applications/drupal-7.41-1/mysql/tmp/mysql.sock'  port: 3308  Source distribution
+160213 18:06:42 mysqld_safe Starting mysqld.bin daemon with databases from /Applications/drupal-7.41-1/mysql/data
+2016-02-13 18:06:42 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).
+2016-02-13 18:06:42 0 [Note] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin (mysqld 5.6.26) starting as process 2228 ...
+2016-02-13 18:06:42 2228 [Note] Plugin 'FEDERATED' is disabled.
+2016-02-13 18:06:42 2228 [Note] InnoDB: Using atomics to ref count buffer pool pages
+2016-02-13 18:06:42 2228 [Note] InnoDB: The InnoDB memory heap is disabled
+2016-02-13 18:06:42 2228 [Note] InnoDB: Mutexes and rw_locks use GCC atomic builtins
+2016-02-13 18:06:42 2228 [Note] InnoDB: Memory barrier is not used
+2016-02-13 18:06:42 2228 [Note] InnoDB: Compressed tables use zlib 1.2.6
+2016-02-13 18:06:42 2228 [Note] InnoDB: Using CPU crc32 instructions
+2016-02-13 18:06:42 2228 [Note] InnoDB: Initializing buffer pool, size = 128.0M
+2016-02-13 18:06:42 2228 [Note] InnoDB: Completed initialization of buffer pool
+2016-02-13 18:06:42 2228 [Note] InnoDB: Highest supported file format is Barracuda.
+2016-02-13 18:06:42 2228 [Note] InnoDB: The log sequence numbers 4930682896 and 4930682896 in ibdata files do not match the log sequence number 5315081806 in the ib_logfiles!
+2016-02-13 18:06:42 2228 [Note] InnoDB: Database was not shutdown normally!
+2016-02-13 18:06:42 2228 [Note] InnoDB: Starting crash recovery.
+2016-02-13 18:06:42 2228 [Note] InnoDB: Reading tablespace information from the .ibd files...
+2016-02-13 18:06:43 2228 [Note] InnoDB: Restoring possible half-written data pages 
+2016-02-13 18:06:43 2228 [Note] InnoDB: from the doublewrite buffer...
+2016-02-13 18:06:43 2228 [Note] InnoDB: 128 rollback segment(s) are active.
+2016-02-13 18:06:43 2228 [Note] InnoDB: Waiting for purge to start
+2016-02-13 18:06:43 2228 [Note] InnoDB: 5.6.26 started; log sequence number 5315081806
+2016-02-13 18:06:43 2228 [Note] RSA private key file not found: /Applications/drupal-7.41-1/mysql/data//private_key.pem. Some authentication plugins will not work.
+2016-02-13 18:06:43 2228 [Note] RSA public key file not found: /Applications/drupal-7.41-1/mysql/data//public_key.pem. Some authentication plugins will not work.
+2016-02-13 18:06:43 2228 [Note] Server hostname (bind-address): '127.0.0.1'; port: 3308
+2016-02-13 18:06:43 2228 [Note]   - '127.0.0.1' resolves to '127.0.0.1';
+2016-02-13 18:06:43 2228 [Note] Server socket created on IP: '127.0.0.1'.
+2016-02-13 18:06:43 2228 [Note] Event Scheduler: Loaded 0 events
+2016-02-13 18:06:43 2228 [Note] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin: ready for connections.
+Version: '5.6.26'  socket: '/Applications/drupal-7.41-1/mysql/tmp/mysql.sock'  port: 3308  Source distribution
+2016-02-14 10:05:54 2228 [Note] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin: Normal shutdown
+
+2016-02-14 10:05:54 2228 [Note] Giving 2 client threads a chance to die gracefully
+2016-02-14 10:05:54 2228 [Note] Event Scheduler: Purging the queue. 0 events
+2016-02-14 10:05:54 2228 [Note] Shutting down slave threads
+2016-02-14 10:05:56 2228 [Note] Forcefully disconnecting 2 remaining clients
+2016-02-14 10:05:56 2228 [Warning] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin: Forcing close of thread 116  user: 'bn_drupal'
+
+2016-02-14 10:05:56 2228 [Warning] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin: Forcing close of thread 117  user: 'bn_drupal'
+
+2016-02-14 10:05:56 2228 [Note] Binlog end
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'partition'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'PERFORMANCE_SCHEMA'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_SYS_DATAFILES'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_SYS_TABLESPACES'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_SYS_FOREIGN_COLS'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_SYS_FOREIGN'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_SYS_FIELDS'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_SYS_COLUMNS'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_SYS_INDEXES'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_SYS_TABLESTATS'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_SYS_TABLES'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_FT_INDEX_TABLE'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_FT_INDEX_CACHE'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_FT_CONFIG'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_FT_BEING_DELETED'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_FT_DELETED'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_FT_DEFAULT_STOPWORD'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_METRICS'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_BUFFER_POOL_STATS'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_BUFFER_PAGE_LRU'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_BUFFER_PAGE'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_CMP_PER_INDEX_RESET'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_CMP_PER_INDEX'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_CMPMEM_RESET'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_CMPMEM'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_CMP_RESET'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_CMP'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_LOCK_WAITS'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_LOCKS'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'INNODB_TRX'
+2016-02-14 10:05:56 2228 [Note] Shutting down plugin 'InnoDB'
+2016-02-14 10:05:56 2228 [Note] InnoDB: FTS optimize thread exiting.
+2016-02-14 10:05:56 2228 [Note] InnoDB: Starting shutdown...
+2016-02-14 10:05:58 2228 [Note] InnoDB: Shutdown completed; log sequence number 5447382611
+2016-02-14 10:05:58 2228 [Note] Shutting down plugin 'BLACKHOLE'
+2016-02-14 10:05:58 2228 [Note] Shutting down plugin 'ARCHIVE'
+2016-02-14 10:05:58 2228 [Note] Shutting down plugin 'MRG_MYISAM'
+2016-02-14 10:05:58 2228 [Note] Shutting down plugin 'MyISAM'
+2016-02-14 10:05:58 2228 [Note] Shutting down plugin 'MEMORY'
+2016-02-14 10:05:58 2228 [Note] Shutting down plugin 'CSV'
+2016-02-14 10:05:58 2228 [Note] Shutting down plugin 'sha256_password'
+2016-02-14 10:05:58 2228 [Note] Shutting down plugin 'mysql_old_password'
+2016-02-14 10:05:58 2228 [Note] Shutting down plugin 'mysql_native_password'
+2016-02-14 10:05:58 2228 [Note] Shutting down plugin 'binlog'
+2016-02-14 10:05:58 2228 [Note] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin: Shutdown complete
+
+160214 10:05:58 mysqld_safe mysqld from pid file /Applications/drupal-7.41-1/mysql/data/mysqld.pid ended
+160214 10:06:05 mysqld_safe Starting mysqld.bin daemon with databases from /Applications/drupal-7.41-1/mysql/data
+2016-02-14 10:06:06 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).
+2016-02-14 10:06:06 0 [Note] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin (mysqld 5.6.26) starting as process 8267 ...
+2016-02-14 10:06:06 8267 [Note] Plugin 'FEDERATED' is disabled.
+2016-02-14 10:06:06 8267 [Note] InnoDB: Using atomics to ref count buffer pool pages
+2016-02-14 10:06:06 8267 [Note] InnoDB: The InnoDB memory heap is disabled
+2016-02-14 10:06:06 8267 [Note] InnoDB: Mutexes and rw_locks use GCC atomic builtins
+2016-02-14 10:06:06 8267 [Note] InnoDB: Memory barrier is not used
+2016-02-14 10:06:06 8267 [Note] InnoDB: Compressed tables use zlib 1.2.6
+2016-02-14 10:06:06 8267 [Note] InnoDB: Using CPU crc32 instructions
+2016-02-14 10:06:06 8267 [Note] InnoDB: Initializing buffer pool, size = 128.0M
+2016-02-14 10:06:06 8267 [Note] InnoDB: Completed initialization of buffer pool
+2016-02-14 10:06:06 8267 [Note] InnoDB: Highest supported file format is Barracuda.
+2016-02-14 10:06:06 8267 [Note] InnoDB: 128 rollback segment(s) are active.
+2016-02-14 10:06:06 8267 [Note] InnoDB: Waiting for purge to start
+2016-02-14 10:06:06 8267 [Note] InnoDB: 5.6.26 started; log sequence number 5447382611
+2016-02-14 10:06:06 8267 [Note] RSA private key file not found: /Applications/drupal-7.41-1/mysql/data//private_key.pem. Some authentication plugins will not work.
+2016-02-14 10:06:06 8267 [Note] RSA public key file not found: /Applications/drupal-7.41-1/mysql/data//public_key.pem. Some authentication plugins will not work.
+2016-02-14 10:06:06 8267 [Note] Server hostname (bind-address): '127.0.0.1'; port: 3308
+2016-02-14 10:06:06 8267 [Note]   - '127.0.0.1' resolves to '127.0.0.1';
+2016-02-14 10:06:06 8267 [Note] Server socket created on IP: '127.0.0.1'.
+2016-02-14 10:06:06 8267 [Note] Event Scheduler: Loaded 0 events
+2016-02-14 10:06:06 8267 [Note] /Applications/drupal-7.41-1/mysql/bin/mysqld.bin: ready for connections.
+Version: '5.6.26'  socket: '/Applications/drupal-7.41-1/mysql/tmp/mysql.sock'  port: 3308  Source distribution
