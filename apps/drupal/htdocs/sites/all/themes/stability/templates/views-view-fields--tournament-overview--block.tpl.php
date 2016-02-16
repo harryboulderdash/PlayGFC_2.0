@@ -52,7 +52,12 @@ Tournament Status	            field_tournament_status	List
 
 <div class="col-xs-9" xmlns="http://www.w3.org/1999/html"><br>
     <div class="pull-right">
-        <a href="<?php print '/node/312/' . $fields['field_tournament_challonge_url']->content ?>" class="btn btn-primary"><i class="fa fa-phone fa-lg"></i> &nbsp;Join Tournament</a>
+        <?php $status = $fields['field_tournament_status']->content;?>
+
+        <?php if($status=="Pending"): ?>
+            <a href="<?php print '/node/312/' . $fields['field_tournament_challonge_url']->content ?>" class="btn btn-primary"><i class="fa fa-phone fa-lg"></i> &nbsp;Join Tournament</a>
+        <?php endif; ?>
+
         <a href="#" class="btn btn-primary"><i class="fa fa-gamepad fa-lg"></i> &nbsp;Live Support</a>
 
     </div>
