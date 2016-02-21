@@ -23,7 +23,7 @@ PS GAMERTAG	LOGO	ROLE	USERNAME	TEAM MEMBER ENTITY ID
     <td><?php print $fields['field_team_member_role']->content; ?></td>
     <td><?php print $fields['name']->content; ?></td>
     <td><?php print $fields['field_team_member_status']->content; ?></td>
-    <td class="btn-sm:active">
+    <td>
     <?php
         //invoke form for each row and pass parameters to it
         echo render(drupal_get_form('manage_teams_form_removeMember_form',$fields['id_1']->content,$fields['name']->content))
