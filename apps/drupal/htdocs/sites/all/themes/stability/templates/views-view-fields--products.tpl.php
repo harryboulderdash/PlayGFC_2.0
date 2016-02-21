@@ -34,9 +34,15 @@
 		<?php print $fields['uc_product_image']->content; ?>
 		<div class="overlay">
 			<div class="dlink"><?php print str_ireplace(t('Add to cart'), '&#xf07a', $fields['addtocartlink']->content); ?></div>
-			<a href="<?php print url('node/' . $fields['nid']->content); ?>" class="zoom"><i class="fa fa-file-text-o"></i></a>
+			<a href="<?php print url('node/' . $fields['nid']->content); ?>" class="zoom"><i class="fa fa-search-plus"></i></a>
 		</div>
 	</figure>
+
+
+
+
+
+
 
 	<div class="project-desc">
 		<h4 class="title"><a href="<?php print url($fields['nid']->content); ?>"><?php print $fields['title']->content; ?></a></h4>
