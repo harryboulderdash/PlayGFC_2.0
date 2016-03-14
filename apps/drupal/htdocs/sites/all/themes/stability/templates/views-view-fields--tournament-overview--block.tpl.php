@@ -58,7 +58,7 @@ Tournament Status	            field_tournament_status	List
             <a href="<?php print '/node/312/' . $fields['field_tournament_challonge_url']->content ?>" class="btn btn-primary"><i class="fa fa-phone fa-lg"></i> &nbsp;Join Tournament</a>
         <?php endif; ?>
 
-        <a href="#" class="btn btn-primary"><i class="fa fa-gamepad fa-lg"></i> &nbsp;Live Support</a>
+        <a href="javascript:void(0);" id="maximizeChat" title="Maximize" class="btn btn-primary"><i class="fa fa-gamepad fa-lg"></i> &nbsp;Live Support</a>
 
     </div>
     <h2>
@@ -71,10 +71,10 @@ Tournament Status	            field_tournament_status	List
 
     <table>
         <thead>
-          <tr style="background: #f1c40f;" >
+          <tr style="background: #27ae60; color: white" >
               <td><strong>Date:</strong> <?php print $fields['field_tournament_time_1']->content; ?></td>
               <td><strong>Price:</strong> <?php print $fields['field_tournament_entry_fee']->content; ?></td>
-              <td><strong>Max Teams:</strong> <?php print $fields['field_maximum_team_size']->content; ?></td>
+              <td><strong>Max Teams:</strong> <?php print $fields['field_bracket_size']->content; ?></td>
               <td><strong>Eligible Teams:</strong> need to calculate</td>
           </tr>
         </thead>
