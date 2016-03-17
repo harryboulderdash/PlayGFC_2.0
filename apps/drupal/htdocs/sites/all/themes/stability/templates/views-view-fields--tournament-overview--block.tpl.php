@@ -68,12 +68,15 @@ Tournament Status	            field_tournament_status	List
       <img class="pull-left" src="http://www.umggaming.com/images/theme/flag/na.png">
       <?php print $fields['field_tournament_gaming_platform']->content; ?>
     </h3>
+    <h5 align="bottom">
+        <i class="fa fa-trophy fa-2x" ></i> 1st Prize: <?php print $fields['field_tournament_prize']->content; ?>
+    </h5>
 
     <table>
         <thead>
           <tr style="background: #27ae60; color: white" >
               <td><strong>Date:</strong> <?php print $fields['field_tournament_time_1']->content; ?></td>
-              <td><strong>Price:</strong> <?php print $fields['field_tournament_entry_fee']->content; ?></td>
+              <td><strong>Entry:</strong> <?php print $fields['field_tournament_entry_fee']->content; ?></td>
               <td><strong>Max Teams:</strong> <?php print $fields['field_bracket_size']->content; ?></td>
               <td><strong>Eligible Teams:</strong> need to calculate</td>
           </tr>
