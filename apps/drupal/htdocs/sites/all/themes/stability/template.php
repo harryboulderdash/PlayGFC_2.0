@@ -53,9 +53,7 @@ function stability_process_page(&$variables) {
   if (theme_get_setting('login_account_links') || module_exists('uc_cart')) {
     $output = '';
     if(theme_get_setting('login_account_links')) {
-      $output .= '<span class="login">
-        <i class="fa fa-lock"></i> ' . l(($user->uid ? t('My Account') : t('Login')), 'user') . '
-      </span>';
+      $output .= '<span class="login"><i class="fa fa-lock"></i> ' . l(($user->uid ? t('My Account') : t('Login')), ($user->uid ? 'users/' . $user->name . '/edit' : 'user')) . '</span>';
       $output .= $user->uid ? '<span class="logout"><i class="fa fa-sign-out"></i> ' . l(t('Logout'), 'user/logout') . '</span>' : '';
       $output .= !$user->uid ? '<span class="register"><i class="fa fa-pencil-square-o"></i>' . t('Not a Member?'). ' ' . l(t('Register'), 'user/register') . '</span>' : '';
     }
