@@ -1090,7 +1090,6 @@ header.header-fixed {
 
 /* iFrame Wrapper */
 .scroll-wrapper {
-  position: fixed;
   right: 0;
   bottom: 0;
   left: 0;
@@ -1100,8 +1099,7 @@ header.header-fixed {
 }
 
 .scroll-wrapper iframe {
-  height: 100%;
-  width: 100%;
+
 }
 
 
