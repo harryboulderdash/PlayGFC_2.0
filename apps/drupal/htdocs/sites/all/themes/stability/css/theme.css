@@ -1087,6 +1087,24 @@ header.header-fixed {
 .section .googlemap-wrapper {
   margin: 0;
 }
+
+/* iFrame Wrapper */
+.scroll-wrapper {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  top: 0;
+  -webkit-overflow-scrolling: touch;
+  overflow-y: scroll;
+}
+
+.scroll-wrapper iframe {
+  height: 100%;
+  width: 100%;
+}
+
+
 /* Featured Section */
 .featured-section {
   margin: 0 -100% 0 -100%;
