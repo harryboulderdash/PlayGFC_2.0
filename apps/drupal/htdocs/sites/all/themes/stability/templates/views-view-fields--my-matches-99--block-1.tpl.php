@@ -22,10 +22,19 @@
  * - $row: The raw result object from the query, with all data it fetched.
  *
  * @ingroup views_templates
+ *
+ * global $user;
+$roleid = 3; //admin role
+
+if(user_has_role($roleid, $user)) {
  */
+
+global $user;
+$roleid = 3; //admin role
+
 ?>
 
-<?php if($fields['field_match_status']->content=="Ready For Play"): ?>
+<?php if(($fields['field_match_status']->content=="Ready For Play") || (user_has_role($roleid, $user))): ?>
     <div style="text-align: left"><?php print $fields['field_match_challonge_id']->content;?></div>
 <?php endif; ?>
 
