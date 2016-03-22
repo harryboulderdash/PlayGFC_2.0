@@ -85,7 +85,6 @@ function manage_tournaments_form_submit($form, &$form_state){
 
     $form_state['build_info']['args'] = explode('/', request_uri());
 
-
     //get url segments count to retrieve tid and mid variables with
     $count = count($form_state['build_info']['args']);
 
@@ -99,10 +98,15 @@ function manage_tournaments_form_submit($form, &$form_state){
     if($w->field_tournament_status->value()=='Started'){drupal_set_message('Tourney already started.'); return;}
 
     //Call the Start function
-    StartTournament($tournamentID);
+   if( StartTournament($tournamentID)){
 
-    //indicate it is done
-    drupal_set_message('Tourney has now been started.');
+       //indicate we started up successfully
+       drupal_set_message('Tourney has now been started.');
+
+   }else{
+       //indicate we did not start up successfully
+       drupal_set_message('Oh, Snap! Tourney did not seem to start correctly. Contact our CMO for help.');
+   }
 
     return;
 
