@@ -159,21 +159,24 @@ $sample_style = array(
                     <h5 style="color:goldenrod">Maps:</h5>
                     <div style="font-size: 13px;font-family: 'Oswald', sans-serif;margin: 0 0 0 0;">
                         <?php
-                        //turn maps string into array and iterate them onto page
-                        $maps = str_getcsv($fields['field_match_maps']->content);
+                            //turn maps string into array and iterate them onto page
+                            $maps = str_getcsv($fields['field_match_maps']->content);
 
-                        foreach($maps as $map){
-                            print $map . '<br>';
-                        }
+                            foreach($maps as $map){
+                                print $map . '<br>';
+                            }
                         ?>
                     </div>
                     <br>
                     <h5 style="color:goldenrod">Hosts:</h5>
                     <div style="font-size: 13px;font-family: 'Oswald', sans-serif;margin: 0 0 0 0;">
                         <?php
-                        print $fields['field_team_name']->content . '<br>';
-                        print $fields['field_team_name_1']->content . '<br>';
-                        print 'TBD';
+                            //turn hosts string into array and iterate them onto page
+                            $hosts = str_getcsv($fields['field_match_host_order']->content);
+
+                            foreach($hosts as $host){
+                                print $host . '<br>';
+                            }
                         ?>
                     </div>
                 </div>
