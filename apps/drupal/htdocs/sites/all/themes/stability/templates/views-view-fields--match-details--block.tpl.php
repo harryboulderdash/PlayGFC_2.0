@@ -114,7 +114,7 @@ $sample_style = array(
                                         $score2 = $fields['field_match_team_2_score']->content;
 
                                         if(!($status == "Scores Reported")){
-                                            Print 'TBD';
+                                            Print 'TBD--';
                                         }
                                         elseif($score1 > $score2){print 'Win: '. $score1;}
                                         elseif($score2 > $score1){print 'Loss: '. $score1;}
@@ -231,6 +231,8 @@ USER, Gamertag, Social Media, Eligability
 
 -->
     <?php print views_embed_view('my_matches_99','block_1'); ?>
+    <?php print views_embed_view('my_matches_button','block'); ?>
+
 
     <?php print views_embed_view('match_team_details','block'); ?>
     <?php print views_embed_view('match_team_2_details','block'); ?>
