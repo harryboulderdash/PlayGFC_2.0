@@ -11,14 +11,19 @@
  * @param object/array $object Object to include with the log
  * @param bool $backtrace TRUE if watchdog log should include full backtrace of the error
  */
-function _watchdog_log($error, $object = NULL, $backtrace = FALSE) {
+function _watchdog_log($error, $object = NULL, $backtrace = FALSE, $msg_type = WATCHDOG_ERROR) {
     $object_msg = $object ? 'Object: ' . var_export($object, TRUE) : '';
     $bt = $backtrace ? 'Backtrace: ' . var_export(debug_backtrace(), TRUE) : '';
-    watchdog('GFC:challonge_functions', "Error message: %error<br>\n%object<br>\n%bt", array('%error' => $error, '%object' => $object_msg, '%bt' => $bt), WATCHDOG_ERROR);
+    watchdog('GFC:challonge_functions', "Error message: %error<br>\n%object<br>\n%bt", array('%error' => $error, '%object' => $object_msg, '%bt' => $bt), $msg_type);
+
+
     /*$last_id = db_query("SELECT 1", array(), array('return' => Database::RETURN_INSERT_ID));
     $msg = t("Error: !id", array('!id' => $last_id));
     $err_msg = user_access('access site reports') ? l($msg, 'admin/reports/event/' . $last_id) : $msg;
-    drupal_set_message($err_msg, 'error');*/
+    drupal_set_message($err_msg, 'error');
+
+    WATCHDOG_DEBUG
+    */
 }
 
 //CONSTANTS
@@ -129,6 +134,9 @@ function StartTournament_Validate($tournamentid){
     /*
      * TODO: complete this mess of logic
      * TODO: call the getTeamStatus() function to complete team checks.
+     * 1. Are there > min and < max players on team?
+     *  --IF NOT, remove the team from tourney
+     *
      * Check for any teams that are not validated
      * 1. If not 'green' then remove that team from tournament
      * 2. We won't actually remove the credits until the tournament starts
@@ -244,6 +252,10 @@ function StartTournament($tournamentid){
                 if (str_replace(' ', '', $participant->misc) == str_replace(' ', '', $teamname)) {
                     //if team matches name get id and update
                     $team->field_team_challonge_id->set((integer)$participant->id);
+
+                    //set seed value here
+                    $team->field_team_current_seed->set((integer)$participant->seed);
+
                     $team->save();
                 }
 
@@ -363,8 +375,6 @@ function UpdateMatchesDataFromAPI($tournament_id)
         //load up tourney data
         $wrapper_t = GetWrapperByEntityID($tournament_id);
 
-
-
         //get API tourney ID for remote calls
         $challongeid = $wrapper_t->field_tournament_challonge_id->value();
 
@@ -454,18 +464,18 @@ function UpdateMatchesDataFromAPI($tournament_id)
                 if (!$match->{'player1-id'}==""){
 
                     //log
-                    _watchdog_log('MATCH TEAM IS SET -- LOOKED UP: ' . $match->{'player1-id'} . (microtime(true) - $start));
+                   // _watchdog_log('MATCH TEAM IS SET -- LOOKED UP: ' . $match->{'player1-id'} . (microtime(true) - $start));
 
 
                     //CHECK TO SEE IF THE GFC TEAMS ARE SAME AS CHALLONGE TEAMS
                     //IF THEY
-                    if(($team1_ID != $match->{'player1-id'}) && ($team2_ID != $match->{'player2-id'})){
+                    if(($team1_ID != $match->{'player1-id'}) || ($team2_ID != $match->{'player2-id'})){
 
                         //IF TEAMS ARE NOW SET BUT ARE DIFFERENT SET TO DO THE UPDATE
                         $shouldUpdateMatches = true;
 
                         //log
-                        _watchdog_log('MATCH TEAM IS SET & CHANGED -- LOOKED UP: ' . $match->{'player1-id'} . (microtime(true) - $start));
+                        //_watchdog_log('MATCH TEAM IS SET & CHANGED -- LOOKED UP: ' . $match->{'player1-id'} . (microtime(true) - $start));
 
                     }else{
 
@@ -473,7 +483,7 @@ function UpdateMatchesDataFromAPI($tournament_id)
                         $shouldUpdateMatches = false;
 
                         //log
-                        _watchdog_log('MATCH TEAM IS SET BUT UNCHANGED -- LOOKED UP: GFC ID=' .$team1_ID . 'CHLNGE ID=' . $match->{'player1-id'} . (microtime(true) - $start));
+                        //_watchdog_log('MATCH TEAM IS SET BUT UNCHANGED -- LOOKED UP: GFC ID=' .$team1_ID . 'CHLNGE ID=' . $match->{'player1-id'} . (microtime(true) - $start));
 
                     }
                 }
@@ -550,6 +560,7 @@ function UpdateMatchesDataFromAPI($tournament_id)
                             $team1 = $node->nid;
                             $emwTeam1 = entity_metadata_wrapper('node', $node);
                             $team1Name = $emwTeam1->field_team_name->value();
+                            $team1Seed = $emwTeam1->field_team_current_seed->value();
 
                             unset($emwTeam1);
                             unset($nodes);
@@ -573,8 +584,10 @@ function UpdateMatchesDataFromAPI($tournament_id)
                         $nodes2 = entity_load('node', array_keys($result2['node']));
                         foreach ($nodes2 as $node2) {
                             $team2 = $node2->nid;
-                            $emwTeam2 = entity_metadata_wrapper('node', $node);
+                            $emwTeam2 = entity_metadata_wrapper('node', $node2);
                             $team2Name = $emwTeam2->field_team_name->value();
+                            $team2Seed = $emwTeam2->field_team_current_seed->value();
+
 
                             unset($emwTeam2);
                         }
@@ -624,14 +637,29 @@ function UpdateMatchesDataFromAPI($tournament_id)
                         $mapsCSV .= t($selectedMap);
 
 
-                        // create csv string here for match value
-                        // use odd & even to order team precedence
+                        /*
+                         * Check seeding and create host order based on it
+                         * */
+
+                        if(min($team1Seed, $team2Seed) == $team1Seed){
+                            $host1Name = $team1Name;
+                            $host2Name = $team2Name;
+
+                        }else{
+                            $host1Name = $team2Name;
+                            $host2Name = $team1Name;
+                        }
+
+
                         if ($i % 2 == 0) {
                             //even maps go to 2nd seed;
-                            $hostsCSV .= $team2Name;
+                            $hostsCSV .= $host2Name;
+                            _watchdog_log('Host EVEN, choices are:' . $host2Name . 'CSV= ' . $hostsCSV, NULL,FALSE, WATCHDOG_DEBUG);
                         } else {
                             //odd maps go to 1st seed
-                            $hostsCSV .= $team1Name;
+                            $hostsCSV .= $host1Name;
+                            _watchdog_log('Host ODD, choices are:' . $host1Name . 'CSV= ' . $hostsCSV, NULL,FALSE, WATCHDOG_DEBUG);
+
                         }
 
                         //if not the last map add a comma
@@ -685,6 +713,11 @@ function UpdateMatchesDataFromAPI($tournament_id)
                     $emw->field_match_host_order->set((string)$hostsCSV);
 
                     $emw->field_match_suggested_play_order->set((integer)$match->{'suggested-play-order'});
+
+                    $emw->field_match_team_1_seed->set($team1Seed);
+                    $emw->field_match_team_2_seed->set($team2Seed);
+
+
 
                     //save the match updates
                     $emw->save();
