@@ -34,7 +34,7 @@ $roleid = 3; //admin role
 
 ?>
 
-<?php if(($fields['field_match_status']->content=="Ready For Play") || (user_has_role($roleid, $user))): ?>
+<?php if($fields['field_match_status']->content=="Ready For Play"): ?>
     <div style="text-align: left"><?php print $fields['field_match_challonge_id']->content;?></div>
 <?php endif; ?>
 

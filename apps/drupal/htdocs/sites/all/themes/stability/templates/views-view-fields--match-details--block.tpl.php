@@ -114,7 +114,7 @@ $sample_style = array(
                                         $score2 = $fields['field_match_team_2_score']->content;
 
                                         if(!($status == "Scores Reported")){
-                                            Print 'TBD--';
+                                            Print 'TBD';
                                         }
                                         elseif($score1 > $score2){print 'Win: '. $score1;}
                                         elseif($score2 > $score1){print 'Loss: '. $score1;}
