@@ -353,6 +353,19 @@ function StartTournament($tournamentid){
 
 }
 
+function finalizeTournament($tournamentID){
+
+    /*
+     * capture wins and losses of users and teams for easy analytics (UID, win/loss, match, opposing team, tourney, score)
+     * update status of Tournament
+     * Create a Tweet about winner once Twitter API setup
+     *
+     *
+     * */
+
+
+}
+
 /**
  * @param $tournament_id
  * @return bool
@@ -491,7 +504,7 @@ function UpdateMatchesDataFromAPI($tournament_id)
 
                 /*
                  * *********************************************************************
-                 * IF THE TEAMS ARE UNCHANGED, THEN DONT DO ANY FURTHER LOOKUPS OR UPDATES SINCE NOTHING HAS CHANGED
+                 * IF THE TEAMS ARE UNCHANGED, THEN DON'T DO ANY FURTHER LOOKUPS OR UPDATES SINCE NOTHING HAS CHANGED
                  * *********************************************************************
                  * */
 
@@ -889,7 +902,7 @@ function getMatchNodeIDByChallongeID($challongeMID){
     return $matchNID;
 }
 
-function getExistingTeamsByUser($currentUser){
+function getExistingTeamsByUser($currentUser,$tournament_url=null){
 
     $currentUserID = $currentUser->uid;
     $userTeams = array();
@@ -897,11 +910,16 @@ function getExistingTeamsByUser($currentUser){
     //field_team_member_user
     //field_team_reference_from_team_m
 
+
+
     $query = new EntityFieldQuery();
+
+
 
     $query->entityCondition('entity_type', 'team_members')
         ->entityCondition('bundle', 'team_members')
         ->fieldCondition('field_team_member_user', 'target_id', $currentUserID, '=')
+
         //  ->fieldCondition('field_marketer', 'target_id', $user->uid, '=');
 
         ->addMetaData('account', user_load(1)); // Run the query as user 1.
@@ -920,6 +938,108 @@ function getExistingTeamsByUser($currentUser){
     }
 
     return $userTeams;
+
+}
+
+function getTeamByTournamentByUser(&$currentUser, $tournamentURL){
+
+    try{
+        //retrieve user UID
+        $currentUserID = $currentUser->uid;
+        //define variable to hold team users
+        $teamMembers = array();
+
+        //create object for tournament
+        $tourneywrapper = GetWrapperByEntityID(getTournamentNodeIDByChallongeID($tournamentURL));
+
+        //iterate throught the teams
+        foreach ($tourneywrapper->field_tournament_teams_entered->getIterator() as $delta => $team) {
+
+            //set variable to team name
+            $teamNID = $team->getIdentifier();
+
+            //set variable
+            $userTeams = array();
+
+            //GET ALL USERS IN EACH TEAM
+            $query = new EntityFieldQuery();
+
+            //load active team members
+            $query->entityCondition('entity_type', 'team_members')
+                ->entityCondition('bundle', 'team_members')
+                ->fieldCondition('field_team_member_user', 'target_id', $currentUserID, '=')
+                ->fieldCondition('field_team_reference_from_team_m', 'target_id', $teamNID, '=')
+                ->fieldCondition('field_team_member_status', 'value', 'deleted', '<>')
+
+                ->addMetaData('account', user_load(1)); // Run the query as user 1.
+
+            $result = $query->execute();
+
+            //TODO!!!! GET ARRAY OF THE UIDS ONLY
+
+            if (isset($result['team_members'])) {
+
+                //test only
+                //return $result;
+                _watchdog_log('USER HAS A TOURNEY TEAM ALREADY: ' . implode(" ",$result), NULL,FALSE, WATCHDOG_DEBUG);
+
+
+                $teamMembers = entity_load('team_members', array_keys($result['team_members']));
+
+                //return $teamMembers;
+
+                //dpm($teams);
+                foreach ($teamMembers as $teamMember) {
+
+                    if($teamMember->field_team_member_user['und'][0]['target_id'] = $currentUserID) {
+                        //dpm($team);
+                        $userTeams[$teamMember->field_team_reference_from_team_m['und'][0]['target_id']] = GetWrapperByEntityID($teamMember->field_team_reference_from_team_m['und'][0]['target_id'])->field_team_name->value();
+
+                    }
+                }
+
+                //clean up
+                unset($teamMembers);
+
+                //RETURN TEAM NAME AND ID IF FOUND
+                return $userTeams;
+
+            }
+        }
+
+        unset($userTeams);
+
+        //return NULL if no team found
+        return false;
+
+    } catch (Exception $e) {
+        _watchdog_log($e->getMessage() . ' ' . $e->getLine() . ' ' . $e->getTraceAsString());
+    }
+
+    /*
+     * NOTE: Load teams from tourney
+     * THEN, in foreach return all users for team in array and check if uid is in array
+     * IF SO, return Team ID
+     * IF NOT, return null
+     *
+     * 1. load all teams from tourney and iterate (similar to stuff in update matches)
+     * 2. load users exactly like 'getExistingTeamsByUser' query, ONLY ADD FIELD CONDITION FOR TEAM ID
+     * 3. ADD CONDITION FOR STATUS != REMOVED
+     * 4. USE in_array FUNCTION TO CHECK IF USER THERE
+     * 5. IF SO, RETURN, ELSE WHEN TEAMS LOOP DONE RETURN NULL
+     *
+     * CODE TO CHECK ARRAY FOR UID VALUE
+     *
+     * $os = array("Mac", "NT", "Irix", "Linux");
+        if (in_array("Irix", $os)) {
+            echo "Got Irix";
+        }
+     * add user
+     *
+     *
+     * */
+
+
 
 }
 
@@ -951,7 +1071,7 @@ function getPlayerRoles(){
         return $playerRoles;
 
     } catch (Exception $e) {
-        _watchdog_log($e->getMessage());
+        _watchdog_log($e->getMessage() . ' ' . $e->getLine() . ' ' . $e->getTraceAsString());
     }
 
 }
