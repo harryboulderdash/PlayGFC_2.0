@@ -124,17 +124,31 @@ function manage_teams_form_block_info() {
 function manage_teams_form_block_view($delta = '') {
     $block = array();
 
+    //set user variable
+    $currentUser = $GLOBALS['user'];
+
+    //Get TID from url
+    $urlArray = explode('/', request_uri());
+    //get url segments count to retrieve tid and mid variables with
+    $tournamentID = $urlArray[(count($urlArray)) - 1];
+
+
     switch ($delta) {
         case 'Manage_Teams_Form_Block':
             $block['subject'] = t('Manage Teams Form Block');
-            $block['content'] = drupal_get_form('manage_teams_form_form');
+            if(!getTeamByTournamentByUser($currentUser->uid, $tournamentID)) {
+                $block['content'] = drupal_get_form('manage_teams_form_form');
+            }else
+            {
+                $block['content'] = drupal_get_form('manage_teams_form_addPlayer_form');
+            }
             break;
     }
 
     switch ($delta) {
         case 'Manage_Teams_AddPlayer_Block':
             $block['subject'] = t('Manage Teams Form Add Player Block');
-            $block['content'] = drupal_get_form('manage_teams_form_addPlayer_form');
+           //$block['content'] = drupal_get_form('manage_teams_form_addPlayer_form');
             break;
     }
 
@@ -157,35 +171,38 @@ function manage_teams_form_form($form, &$form_state) {
      *
      * 4.   when inviting a member GENERATE EMAIL with link to register and join THAT TEAM
      *
-
-
 */
-    if(!user_is_logged_in()){
+    //set user variable
+    $currentUser = $GLOBALS['user'];
 
+    //Get TID from url
+    $form_state['build_info']['args'] = explode('/', request_uri());
+    //get url segments count to retrieve tid and mid variables with
+    $count = count($form_state['build_info']['args']);
+    //set variable to tid value
+    $tournamentID = $form_state['build_info']['args'][$count - 1];
+
+    //INSURE THERE IS A TOURNEY ID IN URL
+    if (!strlen($tournamentID) > 12) {
+        //message that tournament is missing
+        drupal_set_message('Tournament is not specified.');
+        return;
+    }
+
+    //MAKE SURE USER LOGGED IN
+    if(!user_is_logged_in()){
         $options = array('query' => array('destination' =>  current_path()));
         drupal_goto('/user', $options);
-
         }
 
-    if(gfc_session("current_team"))
-    {
-        $teamCreated = 1;
-        $collapseTeam = TRUE;
-
-    }
-    else
-    {
-        $teamCreated=0;
-        $collapseTeam = FALSE;
-    }
-
+    //BUILD THE FORM
     $form = array();
 
     $form['Enter_Team'] = array(
         '#type' => 'fieldset',
         '#title' => t('Add Team to Tourney'),
-        '#collapsible' => TRUE,
-        '#collapsed' => $collapseTeam,
+        '#collapsible' => FALSE,
+        //'#collapsed' => $collapseTeam,
     );
 
     $form['Enter_Team']['team_name'] = array(
@@ -195,26 +212,14 @@ function manage_teams_form_form($form, &$form_state) {
         '#maxlength' => 50,
         '#attributes' => array('placeholder' => t('Enter New Team Name')),
 
-        // '#required' => TRUE, //make this field required
     );
 
     $form['Enter_Team']['existing_team_name'] = array(
         '#type' => 'select',
-        '#title' => t('Enter Existing Team:'),
+        '#title' => t('Or Select a Previous Team:'),
         '#options' => getExistingTeamsByUser($GLOBALS['user']),
         '#empty_option'=> t('--Select Team--'),
     );
-
-    //use logic here
-    //to indicate if a team has been created and set
-    //this value is used by second form to see if it should appear.
-
-
-    if(gfc_session("current_team")) {$teamCreated = 1;}else{$teamCreated=0;}
-
-    //set hidden form field value to trigger visibility of second form -- what a hack :(
-    $form['Enter_Team']['has_team'] = array('#type' => 'hidden', '#value' => $teamCreated);
-
 
     $form['Enter_Team']['submit_button'] = array(
         '#type' => 'submit',
@@ -222,8 +227,7 @@ function manage_teams_form_form($form, &$form_state) {
         '#value' => t('Next Step'),
     );
 
-
-    return $form;
+   return $form;
 }
 
 function manage_teams_form_addPlayer_form($form, &$form_state)
@@ -233,6 +237,32 @@ function manage_teams_form_addPlayer_form($form, &$form_state)
     //https://api.drupal.org/api/examples/ajax_example%21ajax_example_graceful_degradation.inc/function/ajax_example_add_more/7
     //
 
+    //set user variable
+    $currentUser = $GLOBALS['user'];
+
+    $urlArray = explode('/', request_uri());
+    //get url segments count to retrieve tid and mid variables with
+    $count = count($urlArray);
+    //set variable to tid value
+    $tournamentID = $urlArray[$count - 1];
+
+    //INSURE THERE IS A TOURNEY ID IN URL
+    if (!strlen($tournamentID) > 12) {
+        //message that tournament is missing
+        drupal_set_message('Tournament is not specified.');
+        return;
+    }
+
+    //MAKE SURE USER LOGGED IN
+    if(!user_is_logged_in()){
+        $options = array('query' => array('destination' =>  current_path()));
+        drupal_goto('/user', $options);
+    }
+
+    //get team name being managed in current context
+    $teamName = reset(getTeamByTournamentByUser($currentUser->uid, $tournamentID));
+
+
     $form = array();
 
 
@@ -240,9 +270,9 @@ function manage_teams_form_addPlayer_form($form, &$form_state)
     //section to add players
     $form['Add_Players'] = array(
         '#type' => 'fieldset',
-        '#title' => t('Manage Team Roster'),
-        '#collapsible' => TRUE,
-        '#collapsed' => FALSE,
+        '#title' => t('Manage Roster for Team: ' . $teamName),
+        '#collapsible' => FALSE,
+       // '#collapsed' => FALSE,
         '#states' => array(
             'visible' => array(
                 'input[name="has_team"]' => array('value' => '1'),
@@ -257,7 +287,7 @@ function manage_teams_form_addPlayer_form($form, &$form_state)
         '#size' => 20,
         '#maxlength' => 50,
         '#required' => TRUE,
-        '#attributes' => array('placeholder' => t('Invite player by: Username, Email or PS Handle.')),
+        '#attributes' => array('placeholder' => t('Add player by: Username, Email or Gamertag.')),
     );
 
     $form['Add_Players']['Select_Role'] = array(
@@ -270,7 +300,7 @@ function manage_teams_form_addPlayer_form($form, &$form_state)
 
     $form['Add_Players']['submit_button'] = array(
         '#type' => 'submit',
-        '#value' => t('Invite Player'),
+        '#value' => t('Add Player to Roster'),
     );
 
     return $form;
@@ -352,15 +382,13 @@ function manage_teams_form_form_submit($form, &$form_state) {
 //        if (isset($parameters['tid'])) {
 //            $tournament_id = $parameters['tid'];
 
-        $form_state['build_info']['args'] = explode('/', request_uri());
+        $urlArray = explode('/', request_uri());
 
         //get url segments count to retrieve tid and mid variables with
-        $count = count($form_state['build_info']['args']);
-
-        //grab the value of the last section and translate into NID values
+        $count = count($urlArray);
 
         //set variable to tid value
-        $tournamentID = $form_state['build_info']['args'][$count-1];
+        $tournamentID = $urlArray[$count - 1];
 
         if(strlen($tournamentID) > 12){ //insure the tid is the right element based on length
 
@@ -414,16 +442,6 @@ function manage_teams_form_addPlayer_form_validate($form, &$form_state) {
         form_set_error('team_name',t('player info is required.'));
 
     }
-    /* $roleValue = trim($form_state['values']['Select_Role']);
-
-     form_set_error('team_name',t($playerValue . $roleValue));
-     return;*/
-
-
-    /*if(empty($teamValue) && (empty($form_state['values']['Select_Role'])))
-    {
-        form_set_error('team_name',t('you must enter player info and select a role'));
-    }*/
 
 }
 
@@ -433,13 +451,13 @@ function manage_teams_form_addPlayer_form_submit($form, &$form_state){
         //get session value for the team being worked with on last form
         $teamID = gfc_session("current_team");
 
-        $form_state['build_info']['args'] = explode('/', request_uri());
+        $urlArray = explode('/', request_uri());
 
         //get url segments count to retrieve tid and mid variables with
-        $count = count($form_state['build_info']['args']);
+        $count = count($urlArray);
 
         //set variable to tid value
-        $tournamentID = $form_state['build_info']['args'][$count - 1];
+        $tournamentID = $urlArray[$count - 1];
 
         if (strlen($tournamentID) > 12) { //insure the tid is the right element based on length
 
@@ -472,19 +490,30 @@ function manage_teams_form_addPlayer_form_submit($form, &$form_state){
         //if player not found stop and provide warning
         if (!$playerUID) {
             //TODO: message that TID is missing
-            drupal_set_message('This player not yet registered with GFC, would you like to invite them?');
+            //drupal_set_message('This player not yet registered with GFC, would you like to invite them?');
+            drupal_set_message('This player not yet registered with GFC, once registered you can add to team.');
+
             return;
 
             //TODO: if yes then trigger an email back to accept and complete registration and tourney entry.
         }
 
-        //set invite accepted to 0 until later when player confirms
-        $inviteAccepted = 0;
+        //make sure player not already in a team in the same tournament
+        if(!getTeamByTournamentByUser($playerUID, $tournamentID)) {
 
-        $result = AddPlayerToTeam($teamID, $playerUID, $roleID, $inviteAccepted);
+            //set invite accepted to 0 until later when player confirms
+            $inviteAccepted = 0;
 
-        //display success message
-        drupal_set_message(t($playerUsername . ' Added to Roster'));
+            $result = AddPlayerToTeam($teamID, $playerUID, $roleID, $inviteAccepted);
+
+            //display success message
+            drupal_set_message(t($playerUsername . ' Added to Roster'));
+        }else{
+            $teamName = reset(getTeamByTournamentByUser($playerUID, $tournamentID));
+
+            drupal_set_message(t('Warning: ' . $playerUsername . ' is already registered in this Tournament on team ' . $teamName .'. '),'error');
+
+        }
 
     }
 
