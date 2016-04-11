@@ -941,13 +941,15 @@ function getExistingTeamsByUser($currentUser,$tournament_url=null){
 
 }
 
-function getTeamByTournamentByUser(&$currentUser, $tournamentURL){
+function getTeamByTournamentByUser($currentUserUID, $tournamentURL){
 
     try{
         //retrieve user UID
-        $currentUserID = $currentUser->uid;
+        $currentUserID = $currentUserUID;
         //define variable to hold team users
         $teamMembers = array();
+        $arr_tid = array('112');
+
 
         //create object for tournament
         $tourneywrapper = GetWrapperByEntityID(getTournamentNodeIDByChallongeID($tournamentURL));
@@ -969,7 +971,7 @@ function getTeamByTournamentByUser(&$currentUser, $tournamentURL){
                 ->entityCondition('bundle', 'team_members')
                 ->fieldCondition('field_team_member_user', 'target_id', $currentUserID, '=')
                 ->fieldCondition('field_team_reference_from_team_m', 'target_id', $teamNID, '=')
-                ->fieldCondition('field_team_member_status', 'value', 'deleted', '<>')
+                ->fieldCondition('field_team_member_status', 'tid', $arr_tid, 'NOT IN')
 
                 ->addMetaData('account', user_load(1)); // Run the query as user 1.
 
@@ -981,7 +983,7 @@ function getTeamByTournamentByUser(&$currentUser, $tournamentURL){
 
                 //test only
                 //return $result;
-                _watchdog_log('USER HAS A TOURNEY TEAM ALREADY: ' . implode(" ",$result), NULL,FALSE, WATCHDOG_DEBUG);
+                _watchdog_log('USER HAS A TOURNEY TEAM ALREADY: ' . implode(" ",array_keys($result['team_members'])), NULL,FALSE, WATCHDOG_DEBUG);
 
 
                 $teamMembers = entity_load('team_members', array_keys($result['team_members']));
