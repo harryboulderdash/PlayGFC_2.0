@@ -906,21 +906,19 @@ function getExistingTeamsByUser($currentUser,$tournament_url=null){
 
     $currentUserID = $currentUser->uid;
     $userTeams = array();
+    //set array value for REMOVED team members
+    $arr_tid = array('112');
+
     //team_members
     //field_team_member_user
     //field_team_reference_from_team_m
 
-
-
     $query = new EntityFieldQuery();
-
-
 
     $query->entityCondition('entity_type', 'team_members')
         ->entityCondition('bundle', 'team_members')
         ->fieldCondition('field_team_member_user', 'target_id', $currentUserID, '=')
-
-        //  ->fieldCondition('field_marketer', 'target_id', $user->uid, '=');
+        ->fieldCondition('field_team_member_status', 'tid', $arr_tid, 'NOT IN')
 
         ->addMetaData('account', user_load(1)); // Run the query as user 1.
 
@@ -1359,6 +1357,8 @@ function AddPlayerToTeam($teamID, $userID, $roleID, $inviteAccepted){
 
         //save it out
         $emw->save();
+
+        return true;
 
         //exception handler
     } catch (Exception $e) {
