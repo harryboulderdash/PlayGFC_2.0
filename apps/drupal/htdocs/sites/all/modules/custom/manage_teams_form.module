@@ -132,14 +132,20 @@ function manage_teams_form_block_view($delta = '') {
     //get url segments count to retrieve tid and mid variables with
     $tournamentID = $urlArray[(count($urlArray)) - 1];
 
+    //get array of any teams user is on in this tourney
+    $teamArray = getTeamByTournamentByUser($currentUser->uid, $tournamentID);
+
 
     switch ($delta) {
         case 'Manage_Teams_Form_Block':
             $block['subject'] = t('Manage Teams Form Block');
-            if(!getTeamByTournamentByUser($currentUser->uid, $tournamentID)) {
+            if(!$teamArray) {
                 $block['content'] = drupal_get_form('manage_teams_form_form');
             }else
             {
+                //set session team id value
+                gfc_session("current_team", key($teamArray));
+
                 $block['content'] = drupal_get_form('manage_teams_form_addPlayer_form');
             }
             break;
@@ -257,6 +263,7 @@ function manage_teams_form_addPlayer_form($form, &$form_state)
     if(!user_is_logged_in()){
         $options = array('query' => array('destination' =>  current_path()));
         drupal_goto('/user', $options);
+        return;
     }
 
     //get team name being managed in current context
@@ -377,10 +384,6 @@ function manage_teams_form_form_submit($form, &$form_state) {
 //    dpm($form_state);
 
     try {
-        //set tournament_id from url get parameter // TODO: need a better way to keep this state
-//        $parameters = drupal_get_query_parameters();
-//        if (isset($parameters['tid'])) {
-//            $tournament_id = $parameters['tid'];
 
         $urlArray = explode('/', request_uri());
 
@@ -498,16 +501,24 @@ function manage_teams_form_addPlayer_form_submit($form, &$form_state){
             //TODO: if yes then trigger an email back to accept and complete registration and tourney entry.
         }
 
+        //Load Team context based on current user
+        //NOTE: don't need unless abandon session usage
+        //$tourneyArray = getTeamByTournamentByUser($GLOBALS['user']->uid, $tournamentID);
+
         //make sure player not already in a team in the same tournament
         if(!getTeamByTournamentByUser($playerUID, $tournamentID)) {
 
             //set invite accepted to 0 until later when player confirms
             $inviteAccepted = 0;
 
-            $result = AddPlayerToTeam($teamID, $playerUID, $roleID, $inviteAccepted);
+            if(AddPlayerToTeam($teamID, $playerUID, $roleID, $inviteAccepted)){
+                //display success message
+                drupal_set_message(t($playerUsername . ' Added to Roster'));
+            }else{
+                //failure message
+                drupal_set_message(t('Warning: ' . $playerUsername . ' not added Roster. Try again, and if problem persists contact support via Live Chat.'));
+            };
 
-            //display success message
-            drupal_set_message(t($playerUsername . ' Added to Roster'));
         }else{
             $teamName = reset(getTeamByTournamentByUser($playerUID, $tournamentID));
 
