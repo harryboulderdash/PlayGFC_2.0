@@ -27,8 +27,6 @@ function _watchdog_log($error, $object = NULL, $backtrace = FALSE, $msg_type = W
 }
 
 //CONSTANTS
-
-//Taxon IDs
 define('CAPTAIN_ROLE', '69');
 define('MEMBER_REMOVED_STATUS','112');
 
@@ -111,7 +109,7 @@ function createGFCTournament($mynodeidparent) {
 
 }
 
-function getTeamStatus($teamNID,$tournamentid){
+function updateTeamStatus($tournamentURL){
 
     /*
      * TODO:these items
@@ -127,9 +125,95 @@ function getTeamStatus($teamNID,$tournamentid){
      * TODO:consider if this should validate all teams as a collection
      *
      * */
+
+    $start = microtime(true);
+
+    try{
+
+        //define variable to hold team users
+        $arr_tid = array('112');
+
+        //create object for tournament
+        $tourneywrapper = GetWrapperByEntityID(getTournamentNodeIDByChallongeID($tournamentURL));
+
+        //set max and min team members
+        $maxPlayers = $tourneywrapper->field_maximum_team_size->value();
+        $minPlayers = $tourneywrapper->field_minimum_team_size->value();
+
+        //iterate throught the teams
+        foreach ($tourneywrapper->field_tournament_teams_entered->getIterator() as $delta => $team) {
+
+            //set variable to team name
+            $teamNID = $team->getIdentifier();
+
+            //GET ALL USERS IN EACH TEAM
+            $query = new EntityFieldQuery();
+
+            //load active team members
+            $query->entityCondition('entity_type', 'team_members')
+                ->entityCondition('bundle', 'team_members')
+                //->fieldCondition('field_team_member_user', 'target_id', $currentUserID, '=')
+                ->fieldCondition('field_team_reference_from_team_m', 'target_id', $teamNID, '=')
+                ->fieldCondition('field_team_member_status', 'tid', $arr_tid, 'NOT IN')
+
+                ->addMetaData('account', user_load(1)); // Run the query as user 1.
+
+            $result = $query->execute();
+
+            //Check the COUNT of active Team Members for this team
+            if (isset($result['team_members'])) {
+                $numMembers = COUNT($result['team_members']);
+            }else{
+                $numMembers = 0;
+            }
+
+           // _watchdog_log('LOOKED UP TEAM MEMBERS ' . $numMembers . ' WERE FOUND. $reults: ' . print_r($result['team_members']) . ' time ' . (microtime(true) - $start));
+
+
+            //SET ELIGIBILITY VALUE ON TEAM
+            if($numMembers < $minPlayers){
+                //set eligibility value on TEAM
+                $team->field_eligibility->set("Awaiting Team Members");
+            }elseif($numMembers > $maxPlayers){
+                //set eligibility value on TEAM
+                $team->field_eligibility->set("Too Many Team Members");
+            }else{
+                //set eligibility value on TEAM
+                $team->field_eligibility->set("Eligible");
+            }
+
+            //save out results
+            $team->save();
+
+            //CLEAN UP
+            unset($result);
+
+            //field_eligibility
+            /*
+             *  Eligible|Eligible
+                Awaiting Team Members|Awaiting Team Members
+                Too Many Team Members|Too Many Team Members
+                Gamertags Not Validated|Gamertags Not Validated
+                Missing Credits|Missing Credits
+             *
+             *
+             * */
+
+
+        }
+        //return NULL if no team found
+        return true;
+
+    } catch (ErrorException $e) {
+        _watchdog_log($e->getMessage() . ' ' . $e->getPrevious() . ' ' . $e->getLine() . ' ' . $e->getTraceAsString());
+    }
+
+
 }
 
 function StartTournament_Validate($tournamentid){
+
+    $c = new ChallongeAPI('XqrMnBPs15MvmX0izddB4zyIHKswRCoaIAyq4cTt');
 
     /*
      * TODO: complete this mess of logic
@@ -157,6 +241,82 @@ function StartTournament_Validate($tournamentid){
      *
      *
      * */
+
+    /*
+     * STEP 1 compare Challonge Teams with Tournament teams to insure they are all there
+     */
+
+    try {
+        //* 1. load GFC tournament
+
+        //load up GFC tourney data
+        $tourneyNID = getTournamentNodeIDByChallongeID($tournamentid);
+        $tourneywrapper = GetWrapperByEntityID($tourneyNID);
+        $challongeid = $tourneywrapper->field_tournament_challonge_id->value();
+
+        //* 2. load challonge teams
+        // Get all participants
+        $participants = $c->makeCall("tournaments/$challongeid/participants");
+        $participants = $c->getParticipants($challongeid);
+
+        //iterate throught the teams
+        //create a simple array of team IDs
+        $arrTeams = array();
+        $arrErrors = array();
+        foreach ($tourneywrapper->field_tournament_teams_entered->getIterator() as $delta => $GFCteam) {
+            //add each challonge id to array
+            $arrTeams[] = $GFCteam->field_team_challonge_id->value();
+        }
+
+
+        //* 3. iterate through challonge array
+
+        foreach ($participants as $team) {
+            // 4. lookup each team in GFC and confirm it's there
+            // 5. log any missing teams
+
+            //Check array for value
+            if (in_array($team->{'id'}, $arrTeams)) {
+
+                //team is in tourney, all is good,
+                //self correct?
+                //lookup nid for this team and add to tourney?
+
+            } else {
+
+                //if not add to error array:
+               // $arrErrors[] = $team->{'id'};
+
+                //fix missing team
+                //get missing team NID
+                $missingNID = getTeamNodeIDbyChallongeID($team->{'misc'});
+                //add to tourneyd
+                $tourneywrapper->field_tournament_teams_entered[] = $missingNID;
+                //save it out
+                $tourneywrapper->save();
+
+                //update team with Challonge based ID
+                $wTeam = GetWrapperByEntityID($missingNID);
+                $wTeam->field_team_challonge_id->set((integer)$team->{'id'});
+                //save it out
+                $wTeam->save();
+
+                $arrErrors[] = "missing team added to Tourney and Challonge ID updated: " . $wTeam->field_team_name->value();
+
+            }
+
+
+            //$team->{'id'}
+
+
+        }
+
+        return $arrErrors;
+    }
+    catch (Exception $e) {
+    _watchdog_log($e->getMessage() . ' ' . $e->getLine() . ' ' . $e->getTraceAsString());
+    }
+
 }
 
 function StartTournament($tournamentid){
@@ -230,6 +390,8 @@ function StartTournament($tournamentid){
 
 
         //STEP 3 --UPDATE TEAMS WITH CHALLONGE TEAM IDs***********************
+        _watchdog_log('START TEAM UPDATES: ' . (microtime(true) - $start));
+
 
         // Get all participants -- WORKS!
         // http://challonge.com/api/tournaments/:tournament/participants
@@ -241,15 +403,34 @@ function StartTournament($tournamentid){
 
         // retrieve param values needed from GFC data
         //iterate through team gfc node ids
+
+        /*
+         *
+         * TODO: Instead of relying on 'team entered' Iterate through CHALLONGE Participants, and
+         * Perform a TEAM query against the '$participant->misc' which is TEAM ID in GFC
+         * This will insure that all teams in challonge are updated with Challonge ID
+         * Teams are sometimes getting missed here for some reason.
+         * TODO: review 'add to tournament' function to look for reason why team would NOT be added to tournament teams.
+        */
+
         foreach ($tourneywrapper->field_tournament_teams_entered->getIterator() as $delta => $team) {
 
             //set variable to team name
             $teamname = $team->field_team_id->value();
 
+            //debug only
+            _watchdog_log('LOOK UP : ' .$teamname .  ' - ' . $team->field_team_name->value() . (microtime(true) - $start));
+
+
             //update GFC teams with IDs
             foreach ($participants as $participant) {
 
                 if (str_replace(' ', '', $participant->misc) == str_replace(' ', '', $teamname)) {
+
+                    //debug only
+                    _watchdog_log('MATCH FOUND : ' .$teamname .  ' - ' . $participant->misc . (microtime(true) - $start));
+
+
                     //if team matches name get id and update
                     $team->field_team_challonge_id->set((integer)$participant->id);
 
@@ -261,6 +442,9 @@ function StartTournament($tournamentid){
 
             }
         }
+
+        _watchdog_log('END TEAM UPDATES: ' . (microtime(true) - $start));
+
 
         /*
         STEP 4 -- CREATE MATCHES IN GFC***********************
@@ -902,6 +1086,30 @@ function getMatchNodeIDByChallongeID($challongeMID){
     return $matchNID;
 }
 
+function getTeamNodeIDbyChallongeID($teamChallongeID){
+
+    $query = new EntityFieldQuery();
+
+    $query->entityCondition('entity_type', 'node')
+        ->entityCondition('bundle', 'team')
+        ->fieldCondition('field_team_id', 'value', $teamChallongeID, '=')
+        ->addMetaData('account', user_load(1)); // Run the query as user 1.
+
+    $result = $query->execute();
+
+
+    if (isset($result['node'])) {
+        $nodes = entity_load('node', array_keys($result['node']));
+        foreach ($nodes as $node) {
+            $teamNID =  $node->nid;
+        }
+    }
+
+    return $teamNID;
+
+
+}
+
 function getExistingTeamsByUser($currentUser,$tournament_url=null){
 
     $currentUserID = $currentUser->uid;
@@ -1127,6 +1335,15 @@ function getChallongeMatchIDByNodeID($matchNID){
  */
 function createTeamAndAddToTournament($tournamentID, $teamName, &$currentUser, $createTeam){
     include_once DRUPAL_ROOT . '/includes/challonge.class.php';
+
+
+    /*
+     * TODO: NOTE, sometimes the team is NOT added to the tournament teams successfully
+     * So, needt to harden this to insure this is the case.
+     * TODO: Need to AUDIT Challonge teams against Tourney Teams for EXACT MATCH
+     *
+     *
+     * */
 
     //debug logging
     _watchdog_log('createTeamAndAddToTournament:', 'tid: '. $tournamentID . 'team name: ' .  $teamName . 'current uid' . $currentUser->uid . 'create team' .  $createTeam);
@@ -1423,17 +1640,18 @@ function gfc_session($key, $value = NULL) {
      * */
 }
 
-function StartTournamentButtonContextBased($user,$tournamentID){
+function StartTournamentButtonContextBased($user,$tournamentID)
+{
 
 
     $roleid = 3; //admin role
     $output = '';
 
-    if(user_has_role($roleid, $user)) {
-    //yes this user has this role, now check tournament status
+    if (user_has_role($roleid, $user)) {
+        //yes this user has this role, now check tournament status
 
         //check for tournament status
-        if(strlen($tournamentID) > 12) {
+        if (strlen($tournamentID) > 12) {
             $touramentNID = getTournamentNodeIDByChallongeID($tournamentID);
 
 
@@ -1449,9 +1667,45 @@ function StartTournamentButtonContextBased($user,$tournamentID){
             }
         }
 
-        return $output;
+    }
+    return $output;
 
+}
+
+    function validateTournamentContextBased($user, $tournamentID)
+    {
+
+        $roleid = 3; //admin role
+        $output = '';
+
+        if (user_has_role($roleid, $user)) {
+            //yes this user has this role, now check tournament status
+
+            //check for tournament status
+            if (strlen($tournamentID) > 12) {
+                $touramentNID = getTournamentNodeIDByChallongeID($tournamentID);
+
+
+                $w = GetWrapperByEntityID($touramentNID);
+
+                if ($w->field_tournament_status->value() == 'Pending') {
+
+                    //load the start button form
+                    $block = block_load('Manage_Tournaments', 'Manage_Tournaments_Validate_Block');
+                    $output = drupal_render(_block_get_renderable_array(_block_render_blocks(array($block))));
+
+                }
+            }
+        }
+        return $output;
     }
 
 
-}
+    function getURLSegment($uri, $segIndex)
+    {
+
+        $arrURL = explode('/', $uri);
+
+        return $arrURL[count($arrURL) - $segIndex];
+
+    }

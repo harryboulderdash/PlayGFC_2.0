@@ -49,8 +49,12 @@ function manage_tournaments_block_info(){
 function manage_tournaments_block_view($delta = ''){
     switch ($delta) {
         case 'Manage_Tournaments_Form_Block':
-            $block['subject'] = t('Manage Tournaments Form Block');
+            $block['subject'] = t('Start Tourney');
             $block['content'] = drupal_get_form('manage_tournaments_form');
+            break;
+        case 'Manage_Tournaments_Validate_Block':
+            $block['subject'] = t('Validate Tourney');
+            $block['content'] = drupal_get_form('manage_tournaments_validate_form');
             break;
     }
     return $block;
@@ -76,6 +80,30 @@ function manage_tournaments_form($form, &$form_state) {
 
     //load them in form state to pass into the form modal
    // $form_state['build_info']['args'] = explode('/', request_uri());
+
+
+    return $form;
+}
+
+function manage_tournaments_validate_form($form, &$form_state) {
+    $form = array();
+
+    $form['Validate_Tourney'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Validate & Prep Tourney'),
+        '#collapsible' => TRUE,
+        '#collapsed' => FALSE,
+    );
+
+    $form['Validate_Tourney']['submit']=array(
+        '#type'=>'submit',
+        '#title'=>'Validate & Prepare',
+        '#value'=>t('Validate & Prepare')
+    );
+
+
+    //load them in form state to pass into the form modal
+    // $form_state['build_info']['args'] = explode('/', request_uri());
 
 
     return $form;
@@ -111,3 +139,33 @@ function manage_tournaments_form_submit($form, &$form_state){
     return;
 
     }
+
+function manage_tournaments_validate_form_submit($form, &$form_state)
+{
+    try {
+        //grab the value of the last section and translate into NID values
+        $tournamentID = getURLSegment(request_uri(), 1);
+
+        //validate state of data for tourney and fix where needed
+        //get and corrections back as array and display them.
+        $arrErrors = StartTournament_Validate($tournamentID);
+        $strMsg = "";
+
+        if (count($arrErrors) > 0) {
+            //write any error messages that come back.
+            for ($x = 0; $x <= count($arrErrors)-1; $x++) {
+                $strMsg.= $arrErrors[$x] . "<br>";
+            }
+            //$strMsg = "Some corrections were needed to Tourney.";
+
+        } else {
+
+            $strMsg = "No corrections were needed to Tourney.";
+        }
+        //display result
+        drupal_set_message($strMsg);
+
+    } catch (Exception $e) {
+        _watchdog_log($e->getMessage() . ' ' . $e->getLine() . ' ' . $e->getTraceAsString());
+    }
+}
