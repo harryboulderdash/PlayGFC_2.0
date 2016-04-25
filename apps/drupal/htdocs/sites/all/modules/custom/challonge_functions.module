@@ -167,7 +167,7 @@ function updateTeamStatus($tournamentURL){
                 $numMembers = 0;
             }
 
-           // _watchdog_log('LOOKED UP TEAM MEMBERS ' . $numMembers . ' WERE FOUND. $reults: ' . print_r($result['team_members']) . ' time ' . (microtime(true) - $start));
+            _watchdog_log('LOOKED UP TEAM MEMBERS: ' . $numMembers . ' WERE FOUND. ' . (microtime(true) - $start));
 
 
             //SET ELIGIBILITY VALUE ON TEAM
@@ -206,6 +206,7 @@ function updateTeamStatus($tournamentURL){
 
     } catch (ErrorException $e) {
         _watchdog_log($e->getMessage() . ' ' . $e->getPrevious() . ' ' . $e->getLine() . ' ' . $e->getTraceAsString());
+        return false;
     }
 
 
@@ -265,7 +266,7 @@ function StartTournament_Validate($tournamentid){
         $arrErrors = array();
         foreach ($tourneywrapper->field_tournament_teams_entered->getIterator() as $delta => $GFCteam) {
             //add each challonge id to array
-            $arrTeams[] = $GFCteam->field_team_challonge_id->value();
+            $arrTeams[] = $GFCteam->field_team_id->value();
         }
 
 
@@ -276,11 +277,19 @@ function StartTournament_Validate($tournamentid){
             // 5. log any missing teams
 
             //Check array for value
-            if (in_array($team->{'id'}, $arrTeams)) {
-
+            if (in_array($team->{'misc'}, $arrTeams)) {
                 //team is in tourney, all is good,
-                //self correct?
-                //lookup nid for this team and add to tourney?
+
+                //update team with Challonge based ID
+
+                //get team NID
+                $missingNID = getTeamNodeIDbyChallongeID($team->{'misc'});
+                //wrap team
+                $wTeam = GetWrapperByEntityID($missingNID);
+                //set challonge based ID value in GFC Team entity
+                $wTeam->field_team_challonge_id->set((integer)$team->{'id'});
+                //save it out
+                $wTeam->save();
 
             } else {
 
@@ -303,12 +312,12 @@ function StartTournament_Validate($tournamentid){
 
                 $arrErrors[] = "missing team added to Tourney and Challonge ID updated: " . $wTeam->field_team_name->value();
 
+
+                //clean up
+                unset($wTeam);
+
             }
-
-
             //$team->{'id'}
-
-
         }
 
         return $arrErrors;
@@ -318,6 +327,68 @@ function StartTournament_Validate($tournamentid){
     }
 
 }
+
+function StartTournament_RemoveIneligible($tournamentid){
+
+    $c = new ChallongeAPI('XqrMnBPs15MvmX0izddB4zyIHKswRCoaIAyq4cTt');
+
+    //debug timer
+    $start = microtime(true);
+
+
+    try{
+
+        //TODO: add check for new status of tourney "Registration Closed"
+        //remove teams not marked as eligible
+
+        //load up GFC tourney data
+        $tourneyNID = getTournamentNodeIDByChallongeID($tournamentid);
+        $tourneywrapper = GetWrapperByEntityID($tourneyNID);
+        $challongeid = $tourneywrapper->field_tournament_challonge_id->value();
+
+
+        //iterate through the teams
+        //remove from challonge tourney where status isn't eligible.
+        foreach ($tourneywrapper->field_tournament_teams_entered->getIterator() as $delta => $GFCteam) {
+
+            //log
+            _watchdog_log('TEAM ELIGIBILITY IS  ' . $GFCteam->field_eligibility->value()  . (microtime(true) - $start));
+
+
+            //check team for status
+            if($GFCteam->field_eligibility->value()!='Eligible') {
+
+                //log
+                _watchdog_log('TEAM  ' . $GFCteam->field_team_name->value() . ' NOT ELIGIBLE, ID: ' . $GFCteam->field_team_challonge_id->value() . ' '. (microtime(true) - $start));
+
+
+                //remove team from Challonge
+              $result =  $c->deleteParticipant($tournamentid,$GFCteam->field_team_challonge_id->value());
+
+                //log
+                _watchdog_log('API Result:  ' . print_r($c->result)  . ' ' . (microtime(true) - $start));
+
+
+            }
+        }
+
+        //clear all teams from GFC Tourney object (the validate function will repopulate based on Challonge.
+        $tourneywrapper->field_tournament_teams_entered = null;
+
+        //save it
+        $tourneywrapper->save();
+
+        //call the validate function to re-populate the GFC Tourney object with final team list.
+        StartTournament_Validate($tournamentid);
+
+        return true;
+
+    }
+    catch (ErrorException $e) {
+        _watchdog_log('StartTournament_RemoveIneligible ' . $e->getMessage() . ' ' . $e->getPrevious() . ' ' . $e->getLine() . ' ' . $e->getTraceAsString());
+    }
+}
+
 
 function StartTournament($tournamentid){
 
@@ -1643,7 +1714,6 @@ function gfc_session($key, $value = NULL) {
 function StartTournamentButtonContextBased($user,$tournamentID)
 {
 
-
     $roleid = 3; //admin role
     $output = '';
 
@@ -1699,6 +1769,62 @@ function StartTournamentButtonContextBased($user,$tournamentID)
         }
         return $output;
     }
+
+function finalzeTeamsTournamentContextBased($user, $tournamentID)
+{
+
+    $roleid = 3; //admin role
+    $output = '';
+
+    if (user_has_role($roleid, $user)) {
+        //yes this user has this role, now check tournament status
+
+        //check for tournament status
+        if (strlen($tournamentID) > 12) {
+            $touramentNID = getTournamentNodeIDByChallongeID($tournamentID);
+
+
+            $w = GetWrapperByEntityID($touramentNID);
+
+            if ($w->field_tournament_status->value() == 'Pending') {
+
+                //load the start button form
+                $block = block_load('Manage_Tournaments', 'Manage_Tournaments_EvictTeams_Block');
+                $output = drupal_render(_block_get_renderable_array(_block_render_blocks(array($block))));
+
+            }
+        }
+    }
+    return $output;
+}
+
+function updateTeamEligibilityByTournamentContextBased($user, $tournamentID)
+{
+
+    $roleid = 3; //admin role
+    $output = '';
+
+    if (user_has_role($roleid, $user)) {
+        //yes this user has this role, now check tournament status
+
+        //check for tournament status
+        if (strlen($tournamentID) > 12) {
+            $touramentNID = getTournamentNodeIDByChallongeID($tournamentID);
+
+
+            $w = GetWrapperByEntityID($touramentNID);
+
+            if ($w->field_tournament_status->value() == 'Pending') {
+
+                //load the start button form
+                $block = block_load('Manage_Tournaments', 'Manage_Tournaments_UpdateTeamStatus_Block');
+                $output = drupal_render(_block_get_renderable_array(_block_render_blocks(array($block))));
+
+            }
+        }
+    }
+    return $output;
+}
 
 
     function getURLSegment($uri, $segIndex)

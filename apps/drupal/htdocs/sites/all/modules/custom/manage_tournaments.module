@@ -56,6 +56,14 @@ function manage_tournaments_block_view($delta = ''){
             $block['subject'] = t('Validate Tourney');
             $block['content'] = drupal_get_form('manage_tournaments_validate_form');
             break;
+        case 'Manage_Tournaments_EvictTeams_Block':
+            $block['subject'] = t('Finalize Teams');
+            $block['content'] = drupal_get_form('manage_tournaments_evict_form');
+            break;
+        case 'Manage_Tournaments_UpdateTeamStatus_Block':
+        $block['subject'] = t('Update Eligibility');
+        $block['content'] = drupal_get_form('manage_tournaments_updatestatus_form');
+        break;
     }
     return $block;
 
@@ -108,6 +116,56 @@ function manage_tournaments_validate_form($form, &$form_state) {
 
     return $form;
 }
+
+function manage_tournaments_evict_form($form, &$form_state){
+    $form = array();
+
+    $form['EvictTeams_Tourney'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Finalize Teams'),
+        '#collapsible' => TRUE,
+        '#collapsed' => FALSE,
+    );
+
+    $form['EvictTeams_Tourney']['submit']=array(
+        '#type'=>'submit',
+        '#title'=>'Finalize Teams',
+        '#value'=>t('Finalize Teams')
+    );
+
+
+    //load them in form state to pass into the form modal
+    // $form_state['build_info']['args'] = explode('/', request_uri());
+
+
+    return $form;
+}
+
+function manage_tournaments_updatestatus_form($form, &$form_state){
+    $form = array();
+
+    $form['UpdateTeamStatus_Tourney'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Update Eligibility'),
+        '#collapsible' => TRUE,
+        '#collapsed' => FALSE,
+    );
+
+    $form['UpdateTeamStatus_Tourney']['submit']=array(
+        '#type'=>'submit',
+        '#title'=>'Update Eligibility',
+        '#value'=>t('Update Eligibility')
+    );
+
+
+    //load them in form state to pass into the form modal
+    // $form_state['build_info']['args'] = explode('/', request_uri());
+
+
+    return $form;
+
+}
+
 
 function manage_tournaments_form_submit($form, &$form_state){
 
@@ -168,4 +226,62 @@ function manage_tournaments_validate_form_submit($form, &$form_state)
     } catch (Exception $e) {
         _watchdog_log($e->getMessage() . ' ' . $e->getLine() . ' ' . $e->getTraceAsString());
     }
+}
+
+function manage_tournaments_evict_form_submit($form, &$form_state){
+
+    try {
+        //grab the value of the last section and translate into NID values
+        $tournamentID = getURLSegment(request_uri(), 1);
+
+        //validate state of data for tourney and fix where needed
+        //get and corrections back as array and display them.
+        $arrErrors = StartTournament_RemoveIneligible($tournamentID);
+
+        if ($arrErrors){
+            //write any error messages that come back.
+            drupal_set_message('Eligibile Teams Finalized Successfully');
+
+            return true;
+
+        } else {
+
+            drupal_set_message('Eligibile Teams NOT Finalized Successfully-- check logs.');
+
+            return false;
+        }
+
+    } catch (Exception $e) {
+        _watchdog_log($e->getMessage() . ' ' . $e->getLine() . ' ' . $e->getTraceAsString());
+    }
+
+}
+
+function manage_tournaments_updatestatus_form_submit($form, &$form_state){
+    try {
+        //grab the value of the last section and translate into NID values
+        $tournamentID = getURLSegment(request_uri(), 1);
+
+        //validate state of data for tourney and fix where needed
+        //get and corrections back as array and display them.
+        $arrErrors = updateTeamStatus($tournamentID);
+
+        if ($arrErrors){
+            //write any error messages that come back.
+            drupal_set_message('Team Eligibility Updated Successfully');
+
+            return true;
+
+        } else {
+
+            drupal_set_message('Team Eligibility NOT Updated Successfully-- check logs.');
+
+            return false;
+        }
+
+    } catch (Exception $e) {
+        _watchdog_log($e->getMessage() . ' ' . $e->getLine() . ' ' . $e->getTraceAsString());
+    }
+
+
 }
