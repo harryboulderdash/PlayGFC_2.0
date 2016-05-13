@@ -350,6 +350,13 @@ function manage_teams_form_removeMember_form_submit($form, $form_state) {
    // ctools_include('ajax');
    //ctools_add_js('ajax-responder');
 
+
+    //get url segments count to retrieve tid and mid variables with
+    $count = count(explode('/', request_uri()));
+
+    //set variable to tid value
+    $tournamentID = $urlArray[$count - 1];
+
     if (!empty($form_state['input']['memberid'])) {
         $nid = $form_state['input']['memberid'];
         $username = $form_state['input']['username'];
@@ -366,6 +373,17 @@ function manage_teams_form_removeMember_form_submit($form, $form_state) {
         // Return the ajax instructions to the browser via ajax_render().
         //print     ctools_ajax_render($commands);
         //drupal_exit();
+
+        //Run Teams status update for the Tourney
+     /*   if(updateTeamStatus($tournamentID)){
+
+            return true;
+
+        }else{
+
+            return false;
+        }*/
+
     }
 }
 
@@ -525,6 +543,16 @@ function manage_teams_form_addPlayer_form_submit($form, &$form_state){
             drupal_set_message(t('Warning: ' . $playerUsername . ' is already registered in this Tournament on team ' . $teamName .'. '),'error');
 
         }
+
+        //Run Teams status update for the Tourney
+       /* if(updateTeamStatus($tournamentID)){
+
+            return true;
+
+        }else{
+
+            return false;
+        }*/
 
     }
 

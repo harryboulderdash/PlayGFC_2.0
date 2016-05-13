@@ -47,7 +47,15 @@ Tournament Challonge ID	        field_tournament_challonge_id
 Registered Teams	            field_tournament_teams_entered
 URL path settings	            path
 Tournament Status	            field_tournament_status	List
+ *
+ *
+ * field_tournament_challonge_url
+ * if(!getTeamByTournamentByUser($playerUID, $tournamentID))
  */
+
+//SET USER OBJECT
+$user = $GLOBALS['user'];
+
 ?>
 
 <div class="col-xs-9" xmlns="http://www.w3.org/1999/html"><br>
@@ -55,7 +63,11 @@ Tournament Status	            field_tournament_status	List
         <?php $status = $fields['field_tournament_status']->content;?>
 
         <?php if($status=="Pending"): ?>
-            <a href="<?php print '/node/312/' . $fields['field_tournament_challonge_url']->content ?>" class="btn btn-primary"><i class="fa fa-phone fa-lg"></i> &nbsp;Join Tournament</a>
+            <?php if(getTeamByTournamentByUser($user->uid, $fields['field_tournament_challonge_url']->content)): ?>
+                <a href="<?php print '/node/312/' . $fields['field_tournament_challonge_url']->content ?>" class="btn btn-primary"><i class="fa fa-phone fa-lg"></i> &nbsp;Manage Team</a>
+            <?php else: ?>
+                <a href="<?php print '/node/312/' . $fields['field_tournament_challonge_url']->content ?>" class="btn btn-primary"><i class="fa fa-phone fa-lg"></i> &nbsp;Join Tournament</a>
+            <?php endif; ?>
         <?php endif; ?>
 
         <a href="javascript:void(0);" id="maximizeChat" title="Maximize" class="btn btn-primary"><i class="fa fa-gamepad fa-lg"></i> &nbsp;Live Support</a>
