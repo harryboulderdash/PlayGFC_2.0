@@ -212,6 +212,107 @@ function updateTeamStatus($tournamentURL){
 
 }
 
+function updateSingleTeamStatus($tournamentURL,$teamNID){
+
+    /*
+     * TODO:these items
+     * Check each player for accepting participation
+     * Check each player for adequate credits
+     * Insure gamertags are all valid
+     * any other rules I am forgetting
+     *
+     * return either a string of problems
+     * optionally, these could be constants,
+     * or could create content type with the error messages, colors, etc.
+     *
+     *
+     * */
+
+    $start = microtime(true);
+
+    try{
+
+        //define STATUS_ID variable to hold team users
+        $arr_tid = array('112');
+
+        //create object for tournament
+        $tourneywrapper = GetWrapperByEntityID(getTournamentNodeIDByChallongeID($tournamentURL));
+        $teamwrapper = GetWrapperByEntityID($teamNID);
+
+        //set max and min team members
+        $maxPlayers = $tourneywrapper->field_maximum_team_size->value();
+        $minPlayers = $tourneywrapper->field_minimum_team_size->value();
+
+        //Check info on a single team based on ID passed in
+
+
+            //GET ALL USERS IN EACH TEAM
+            $query = new EntityFieldQuery();
+
+            //load active team members
+            $query->entityCondition('entity_type', 'team_members')
+                ->entityCondition('bundle', 'team_members')
+                //->fieldCondition('field_team_member_user', 'target_id', $currentUserID, '=')
+                ->fieldCondition('field_team_reference_from_team_m', 'target_id', $teamNID, '=')
+                ->fieldCondition('field_team_member_status', 'tid', $arr_tid, 'NOT IN')
+
+                ->addMetaData('account', user_load(1)); // Run the query as user 1.
+
+            $result = $query->execute();
+
+            //Check the COUNT of active Team Members for this team
+            if (isset($result['team_members'])) {
+                $numMembers = COUNT($result['team_members']);
+            }else{
+                $numMembers = 0;
+            }
+
+            _watchdog_log('LOOKED UP TEAM MEMBERS: ' . $numMembers . ' WERE FOUND. ' . (microtime(true) - $start));
+
+
+            //SET ELIGIBILITY VALUE ON TEAM
+            if($numMembers < $minPlayers){
+                //set eligibility value on TEAM
+                $teamwrapper->field_eligibility->set("Awaiting Team Members");
+            }elseif($numMembers > $maxPlayers){
+                //set eligibility value on TEAM
+                $teamwrapper->field_eligibility->set("Too Many Team Members");
+            }else{
+                //set eligibility value on TEAM
+                $teamwrapper->field_eligibility->set("Eligible");
+            }
+
+            //save out results
+            $teamwrapper->save();
+
+            //CLEAN UP
+            unset($result);
+            unset($teamwrapper);
+            unset($tourneywrapper);
+
+            //field_eligibility
+            /*
+             *  Eligible|Eligible
+                Awaiting Team Members|Awaiting Team Members
+                Too Many Team Members|Too Many Team Members
+                Gamertags Not Validated|Gamertags Not Validated
+                Missing Credits|Missing Credits
+
+             *
+             * */
+
+
+        //return NULL if no team found
+        return true;
+
+    } catch (ErrorException $e) {
+        _watchdog_log($e->getMessage() . ' ' . $e->getPrevious() . ' ' . $e->getLine() . ' ' . $e->getTraceAsString());
+        return false;
+    }
+
+
+}
+
 function StartTournament_Validate($tournamentid){
 
     $c = new ChallongeAPI('XqrMnBPs15MvmX0izddB4zyIHKswRCoaIAyq4cTt');
@@ -1666,6 +1767,7 @@ function RemovePlayerFromTeam($entityID){
      * that's okay because when tournament starts
      * only those in the team (having status ACTIVE) at the MOMENT it starts will have their credits removed permanently
      *
+     * I mean, that is, someday when we implement that feature...
      *
      * */
 

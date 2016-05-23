@@ -544,15 +544,15 @@ function manage_teams_form_addPlayer_form_submit($form, &$form_state){
 
         }
 
-        //Run Teams status update for the Tourney
-       /* if(updateTeamStatus($tournamentID)){
+        //Run Teams status update for just the team modified
+        if(updateSingleTeamStatus($tournamentID,$teamID)){
 
             return true;
 
         }else{
 
             return false;
-        }*/
+        }
 
     }
 
