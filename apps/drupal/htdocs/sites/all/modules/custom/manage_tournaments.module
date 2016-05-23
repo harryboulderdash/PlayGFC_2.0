@@ -229,6 +229,7 @@ function manage_tournaments_validate_form_submit($form, &$form_state)
 }
 
 function manage_tournaments_evict_form_submit($form, &$form_state){
+    //deletes teams from tourney who are not currently eligible
 
     try {
         //grab the value of the last section and translate into NID values
