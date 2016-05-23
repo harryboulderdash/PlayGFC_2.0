@@ -214,6 +214,8 @@ function updateTeamStatus($tournamentURL){
 
 function updateSingleTeamStatus($tournamentURL,$teamNID){
 
+    //lightweight update for single teams eligibility based on player count
+
     /*
      * TODO:these items
      * Check each player for accepting participation
