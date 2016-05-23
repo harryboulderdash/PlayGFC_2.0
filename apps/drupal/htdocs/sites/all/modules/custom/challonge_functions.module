@@ -232,6 +232,7 @@ function updateSingleTeamStatus($tournamentURL,$teamNID){
 
     try{
 
+
         //define STATUS_ID variable to hold team users
         $arr_tid = array('112');
 
