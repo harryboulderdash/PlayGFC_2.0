@@ -1,0 +1,27 @@
+{ "uc_payment_uc_payment_credit_user_bank_account" : {
+  "LABEL" : "Credit user bank account after tokens order paid",
+  "PLUGIN" : "reaction rule",
+  "OWNER" : "rules",
+  "REQUIRES" : [ "uc_order", "php", "rules", "uc_cart" ],
+  "ON" : { "uc_checkout_complete" : [], "uc_cart_checkout_start" : [] },
+  "IF" : [
+    { "uc_order_condition_has_product_class" : {
+      "order" : [ "order" ],
+      "product_classes" : { "value" : { "credits" : "credits" } },
+      "required" : "0",
+      "forbidden" : "1"
+    }
+    }
+  ],
+  "DO" : [
+    { "LOOP" : {
+      "USING" : { "list" : [ "order:products" ] },
+      "ITEM" : { "list_item" : "Cart Product" },
+      "DO" : [
+        { "drupal_message" : { "message" : "\u003C?php \r\n\/\/captures completed credit purchase and adds to user\u0027s bank ledger\r\n\/\/provides message to user\r\n\r\n\/\/echo \u0027value of the weight times quantity is: \u0027 . (($list_item-\u003Eweight) * ($list_item-\u003Eqty));\r\n\/\/echo \u0027the user is: \u0027 . $order-\u003Euid;\r\n\/\/echo \u0027order info is: \u0027 . $order-\u003Eorder_id;\r\n\r\n$totalCredits = (($list_item-\u003Eweight) * ($list_item-\u003Eqty));\r\n$tranType = \u0027Credit Added From Purchase\u0027;\r\n$notes = \u0027Credits added by system.\u0027;\r\n$tournament_id = null;\r\n\r\naddUserBankLedger(\u0027User Bank Ledger Add\u0027, $order-\u003Euid, $totalCredits, $tranType,$notes, $tournament_id);\r\n\r\necho  (($list_item-\u003Eweight) * ($list_item-\u003Eqty)) . \u0027 Credits have been added to your GFC Bank account!\u0027;\r\n\r\n ?\u003E" } }
+      ]
+    }
+    }
+  ]
+}
+}d
