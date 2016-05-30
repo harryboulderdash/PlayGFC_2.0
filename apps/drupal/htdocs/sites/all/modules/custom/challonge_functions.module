@@ -437,60 +437,48 @@ function StartTournament_RemoveIneligible($tournamentid){
     $c = new ChallongeAPI('XqrMnBPs15MvmX0izddB4zyIHKswRCoaIAyq4cTt');
 
     //debug timer
-    $start = microtime(true);
+    //$start = microtime(true);
 
 
     try{
 
-        //TODO: add check for new status of tourney "Registration Closed"
-        //remove teams not marked as eligible
-
         //load up GFC tourney data
         $tourneyNID = getTournamentNodeIDByChallongeID($tournamentid);
         $tourneywrapper = GetWrapperByEntityID($tourneyNID);
-        $challongeid = $tourneywrapper->field_tournament_challonge_id->value();
-
 
         //iterate through the teams
         //remove from challonge tourney where status isn't eligible.
         foreach ($tourneywrapper->field_tournament_teams_entered->getIterator() as $delta => $GFCteam) {
 
             //log
-            _watchdog_log('TEAM ELIGIBILITY IS  ' . $GFCteam->field_eligibility->value()  . (microtime(true) - $start));
-
+           // _watchdog_log('TEAM ELIGIBILITY IS  ' . $GFCteam->field_eligibility->value()  . (microtime(true) - $start));
 
             //check team for status
-            if($GFCteam->field_eligibility->value()!='Eligible') {
+            if($GFCteam->field_eligibility->value()) {
+                if ($GFCteam->field_eligibility->value() != 'Eligible') {
 
-                //log
-                _watchdog_log('TEAM  ' . $GFCteam->field_team_name->value() . ' NOT ELIGIBLE, ID: ' . $GFCteam->field_team_challonge_id->value() . ' '. (microtime(true) - $start));
+                    //remove team from Challonge
+                    $result = $c->deleteParticipant($tournamentid, $GFCteam->field_team_challonge_id->value());
 
+                    //Update Team status to 'REMOVED'
+                    $GFCteam->field_eligibility->set('Removed');
 
-                //remove team from Challonge
-              $result =  $c->deleteParticipant($tournamentid,$GFCteam->field_team_challonge_id->value());
-
-                //log
-                _watchdog_log('API Result:  ' . print_r($c->result)  . ' ' . (microtime(true) - $start));
-
-
+                    //save it out
+                    $GFCteam->save();
+                }
             }
         }
 
-        //clear all teams from GFC Tourney object (the validate function will repopulate based on Challonge.
-        $tourneywrapper->field_tournament_teams_entered = null;
 
-        //save it
-        $tourneywrapper->save();
-
-        //call the validate function to re-populate the GFC Tourney object with final team list.
-        StartTournament_Validate($tournamentid);
-
-        return true;
 
     }
     catch (ErrorException $e) {
         _watchdog_log('StartTournament_RemoveIneligible ' . $e->getMessage() . ' ' . $e->getPrevious() . ' ' . $e->getLine() . ' ' . $e->getTraceAsString());
+        return false;
     }
+
+    return true;
+
 }
 
 
@@ -1930,6 +1918,66 @@ function updateTeamEligibilityByTournamentContextBased($user, $tournamentID)
     }
     return $output;
 }
+
+    function addUserBankLedger($title='User Bank Ledger Add', $customer_uid, $credit_value, $type_transaction,$notes, $tournament_id = null){
+        //set field values
+        /*
+         * field_transaction_user
+         *field_transaction_type
+         * field_transaction_value
+         * field_tournament_id
+         * field_transaction_notes
+         *
+         *
+         *  Credit Added From Purchase
+            Credit Used on Tournament
+            Credit Added From GFC Prize
+         *
+         *
+         *
+         * */
+
+
+
+        try{
+
+            //add ledger entry for user
+            $values = array(
+                'type' => 'user_bank_ledger',
+                'uid' => 1,
+                'status' => 1,
+                'comment' => 1,
+                'promote' => 0,
+            );
+
+            //create match entity and wrap it
+            $userBank= entity_create('node', $values);
+            $emw = entity_metadata_wrapper('node', $userBank);
+
+
+
+            $emw->title->set($title);
+            $emw->field_transaction_date->set(time());
+            $emw->field_transaction_user->set($customer_uid);
+            $emw->field_transaction_type->set($type_transaction);
+            $emw->field_transaction_value->set($credit_value);
+            $emw->field_tournament_id->set($tournament_id);
+            $emw->field_transaction_notes->set($notes);
+
+            //save the match updates
+            $emw->save();
+
+        }
+        catch (EntityMetadataWrapperException $exc) {
+            _watchdog_log($exc->getMessage(),$exc);
+
+            return false;
+
+        }
+
+        return true;
+    }
+
 
 
     function getURLSegment($uri, $segIndex)
