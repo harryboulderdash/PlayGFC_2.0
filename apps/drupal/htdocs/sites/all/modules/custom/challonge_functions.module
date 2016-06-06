@@ -450,11 +450,9 @@ function StartTournament_RemoveIneligible($tournamentid){
         //remove from challonge tourney where status isn't eligible.
         foreach ($tourneywrapper->field_tournament_teams_entered->getIterator() as $delta => $GFCteam) {
 
-            //log
-           // _watchdog_log('TEAM ELIGIBILITY IS  ' . $GFCteam->field_eligibility->value()  . (microtime(true) - $start));
 
             //check team for status
-            if($GFCteam->field_eligibility->value()) {
+            if($GFCteam->field_team_challonge_id->value()!=null) {
                 if ($GFCteam->field_eligibility->value() != 'Eligible') {
 
                     //remove team from Challonge
@@ -465,6 +463,8 @@ function StartTournament_RemoveIneligible($tournamentid){
 
                     //save it out
                     $GFCteam->save();
+
+                    drupal_set_message('updated status to removed');
                 }
             }
         }
