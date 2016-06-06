@@ -63,15 +63,25 @@ $user = $GLOBALS['user'];
         <?php $status = $fields['field_tournament_status']->content;?>
 
         <?php if($status=="Pending"): ?>
+            <?php $fonthtml = '<i class="fa fa-wrench fa-lg"></i>' ?>
             <?php if(getTeamByTournamentByUser($user->uid, $fields['field_tournament_challonge_url']->content)): ?>
-                <a href="<?php print '/node/312/' . $fields['field_tournament_challonge_url']->content ?>" class="btn btn-primary"><i class="fa fa-phone fa-lg"></i> &nbsp;Manage Team</a>
+                <a href="<?php print base_path() . 'node/312/' . $fields['field_tournament_challonge_url']->content ?>" class="btn btn-primary"><i class="fa fa-wrench fa-lg"></i> &nbsp;Manage Team</a>
             <?php else: ?>
-                <a href="<?php print '/node/312/' . $fields['field_tournament_challonge_url']->content ?>" class="btn btn-primary"><i class="fa fa-phone fa-lg"></i> &nbsp;Join Tournament</a>
+                <a href="<?php print base_path() . 'node/312/'. $fields['field_tournament_challonge_url']->content ?>" class="btn btn-primary"><i class="fa fa-user-plus fa-lg"></i> &nbsp;Join Tournament</a>
             <?php endif; ?>
         <?php endif; ?>
 
-        <a href="javascript:void(0);" id="maximizeChat" title="Maximize" class="btn btn-primary"><i class="fa fa-gamepad fa-lg"></i> &nbsp;Live Support</a>
+        <?php if($status=="Registration Closed"): ?>
+            <div data-animation="rotateIn" data-animation-delay="100" style="animation-delay: 3000ms;" class="progress progress-striped active animation rotateIn animation-visible">
+                <div class="progress-bar" role="progressbar"  aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+                    <span class="progress-label">Registration Closed! Startup in progress.  </span>
+                </div>
+            </div>
+        <?php endif; ?>
 
+        <!--
+        <a href="javascript:void(0);" id="maximizeChat" title="Maximize" class="btn btn-primary"><i class="fa fa-gamepad fa-lg"></i> &nbsp;Live Support</a>
+        -->
     </div>
     <h2>
       <?php print '    ' . $fields['field_tournament_name']->content; ?>
@@ -101,7 +111,7 @@ $user = $GLOBALS['user'];
             <td><strong>Start Time:</strong> <?php print $fields['field_tournament_time']->content; ?></td>
             <td><strong>Min Team Size:</strong> <?php print $fields['field_minimum_team_size']->content; ?></td>
             <td rowspan="3" class="pull-right">
-                <a class="btn btn-default" value="View Bracket" href="#tab-2" data-toggle="tab"><i class="fa fa-dashboard fa-lg"></i> &nbsp; View Bracket</a>
+                <a class="btn btn-default" value="View Bracket" href="#tab-3" data-toggle="tab"><i class="fa fa-dashboard fa-lg"></i> &nbsp; View Bracket</a>
             </td>
         </tr>
         <tr>
