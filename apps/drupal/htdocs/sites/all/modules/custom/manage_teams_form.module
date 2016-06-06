@@ -166,16 +166,11 @@ function manage_teams_form_form($form, &$form_state) {
 
     /*
      * TODO: URGENT--
-     * 1.   Determine if user has a team in this tournament
-     *      If YES, then lock the team selection to that value
-     *      make the create a team box unavailable
-     *      Build a return team by user and tournament function
+
      *
-     * 2.   Allow only member adds and subtracts
+     * 1.   Prevent duplicate teams on submit handler
      *
-     * 3.   Prevent duplicate teams on submit handler
-     *
-     * 4.   when inviting a member GENERATE EMAIL with link to register and join THAT TEAM
+     * 2.   when inviting a member GENERATE EMAIL with link to register and join THAT TEAM
      *
 */
     //set user variable
@@ -195,11 +190,23 @@ function manage_teams_form_form($form, &$form_state) {
         return;
     }
 
-    //MAKE SURE USER LOGGED IN
+
+    //MAKE SURE USER LOGGED IN ELSE SEND TO LOGIN PAGE
     if(!user_is_logged_in()){
         $options = array('query' => array('destination' =>  current_path()));
         drupal_goto('/user', $options);
         }
+
+    //If tourney registration closed send back to details page
+    // first, load tourney and check status
+    $tw = GetWrapperByEntityID(getTournamentNodeIDByChallongeID($tournamentID));
+    $tourneyStatus = $tw->field_tournament_status->value();
+
+    if($tourneyStatus=="Registration Closed"){
+        drupal_set_message('Registration is now closed for this tournament. Play will begin shortly.');
+        drupal_goto('/node/493/' . $tournamentID);
+
+    }
 
     //BUILD THE FORM
     $form = array();
@@ -264,6 +271,18 @@ function manage_teams_form_addPlayer_form($form, &$form_state)
         $options = array('query' => array('destination' =>  current_path()));
         drupal_goto('/user', $options);
         return;
+    }
+
+    //If tourney registration closed send back to details page
+    // first, load tourney and check status
+    $tw = GetWrapperByEntityID(getTournamentNodeIDByChallongeID($tournamentID));
+    $tourneyStatus = $tw->field_tournament_status->value();
+
+    //if registration closed set a message and send to tourney details page
+    if($tourneyStatus=="Registration Closed"){
+        drupal_set_message('Registration is now closed for this tournament. Play will begin shortly.');
+        drupal_goto('/node/493/' . $tournamentID);
+
     }
 
     //get team name being managed in current context
@@ -395,6 +414,8 @@ function manage_teams_form_form_validate($form, &$form_state) {
     {
         form_set_error('team_name',t('You must either create a team or choose one to enter:'));
     }
+
+    //TODO check if team name exists in this tourney and stop them
 
 }
 
