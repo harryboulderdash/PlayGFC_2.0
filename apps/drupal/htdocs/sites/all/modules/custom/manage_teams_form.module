@@ -333,9 +333,21 @@ function manage_teams_form_addPlayer_form($form, &$form_state)
 
 }
 
-function manage_teams_form_removeMember_form($form,&$form_state, $member_id,$username) {
+function manage_teams_form_removeMember_form($form,&$form_state, $member_id,$username,$teamNID,$tournamentURL) {
 
     return array(
+
+        'teamid' => array(
+            '#type' => 'hidden',
+            '#required' => TRUE,
+            '#value' => $teamNID,
+        ),
+
+        'tournamentid' => array(
+            '#type' => 'hidden',
+            '#required' => TRUE,
+            '#value' => $tournamentURL,
+        ),
 
         'memberid' => array(
             '#type' => 'hidden',
@@ -366,56 +378,87 @@ function manage_teams_form_removeMember_form($form,&$form_state, $member_id,$use
  */
 function manage_teams_form_removeMember_form_submit($form, $form_state) {
 
-   // ctools_include('ajax');
-   //ctools_add_js('ajax-responder');
-
-
     //get url segments count to retrieve tid and mid variables with
     $count = count(explode('/', request_uri()));
-
-    //set variable to tid value
-    $tournamentID = $urlArray[$count - 1];
 
     if (!empty($form_state['input']['memberid'])) {
         $nid = $form_state['input']['memberid'];
         $username = $form_state['input']['username'];
+        $teamID = $form_state['input']['teamid'];
+        $tournamentID = $form_state['input']['tournamentid'];
 
         RemovePlayerFromTeam($nid);
 
-        //display success message
-        drupal_set_message(t($username . ' Removed from Roster'));
+        if(updateSingleTeamStatus($tournamentID,$teamID)){
 
-        //refresh page to reflect change
-       //$commands[] = ajax_command_invoke('.view-id-roster2', 'trigger', array('RefreshView'));
-       // $commands[] = ctools_ajax_command_reload();
-
-        // Return the ajax instructions to the browser via ajax_render().
-        //print     ctools_ajax_render($commands);
-        //drupal_exit();
-
-        //Run Teams status update for the Tourney
-     /*   if(updateTeamStatus($tournamentID)){
+            //display success message
+            drupal_set_message(t($username . ' Removed from Roster'));
 
             return true;
 
         }else{
+            drupal_set_message(t('Problem removing ' . $username . ' from Roster. Contact Support. '));
+
 
             return false;
-        }*/
+        }
+
+        //display success message
+        drupal_set_message(t($username . ' Removed from Roster'));
 
     }
 }
 
 function manage_teams_form_form_validate($form, &$form_state) {
 
+    $urlArray = explode('/', request_uri());
 
-    $teamValue = trim($form_state['values']['team_name']);
-    if(empty($teamValue) && (empty($form_state['values']['existing_team_name'])))
-    {
-        form_set_error('team_name',t('You must either create a team or choose one to enter:'));
+    //get url segments count to retrieve tid and mid variables with
+    $count = count($urlArray);
+
+    //set variable to tid value
+    $tournamentID = $urlArray[$count - 1];
+
+    //insure the tid is the right element based on length
+    if(!strlen($tournamentID) > 12){
+        //TODO: message that TID is missing
+        drupal_set_message('Tournament is not specified.');
+        return;
     }
 
-    //TODO check if team name exists in this tourney and stop them
+    //If tourney registration closed send back to details page
+    // first, load tourney and check status
+    $tw = GetWrapperByEntityID(getTournamentNodeIDByChallongeID($tournamentID));
+    $tourneyStatus = $tw->field_tournament_status->value();
+
+    //if registration closed set a message and send to tourney details page
+    if($tourneyStatus=="Registration Closed"){
+        drupal_set_message('Registration is now closed for this tournament. Play will begin shortly.');
+        drupal_goto('/node/493/' . $tournamentID);
+
+    }
+   
+    //validate that a team name was either selected or entered
+    $teamValue = trim($form_state['values']['team_name']);
+
+    if(empty($teamValue)){
+
+        $teamValue = trim($form_state['values']['existing_team_name']);
+    }
+    if(empty($teamValue))
+    {
+        form_set_error('team_name',t('You must either create a team or choose one to enter:'));
+        return;
+    }
+
+    //prevent duplicate team names in same tourney
+    if(isTeamNameTaken($tournamentID, $teamValue)){
+        //advise user to choose another team name or a new variant
+        form_set_error('team_name',t('The team name ' . $teamValue . ' is taken in this tournament. Try again with a different or altered team name.'));
+        return;
+    }
+
+
 
 }
 
@@ -456,7 +499,8 @@ function manage_teams_form_form_submit($form, &$form_state) {
         }
         else
         {
-            drupal_set_massage('No team is specified.');
+            drupal_set_message('No team is specified.');
+            return;
         }
 
         $teamNID = createTeamAndAddToTournament($tournament_id, $teamName, $GLOBALS['user'],$createTeam);
