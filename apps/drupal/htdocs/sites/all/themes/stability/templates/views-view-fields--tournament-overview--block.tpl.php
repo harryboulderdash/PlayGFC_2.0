@@ -72,10 +72,8 @@ $user = $GLOBALS['user'];
         <?php endif; ?>
 
         <?php if($status=="Registration Closed"): ?>
-            <div data-animation="rotateIn" data-animation-delay="100" style="animation-delay: 3000ms;" class="progress progress-striped active animation rotateIn animation-visible">
-                <div class="progress-bar" role="progressbar"  aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
-                    <span class="progress-label">Registration Closed! Startup in progress.  </span>
-                </div>
+            <div data-animation="rotateIn" data-animation-delay="1000" style="margin-left: 5px; margin-right: 5px; border-radius: 1px; border-style: solid; animation-delay: 1000ms;" class="alert alert-danger animation rotateIn animation-visible"><button type="button" class="close" data-dismiss="alert" aria-hidden="true"><i class="fa fa-times"></i></button>
+                <b>Note: Registration Closed! Startup in progress.</b>
             </div>
         <?php endif; ?>
 
