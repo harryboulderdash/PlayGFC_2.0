@@ -411,6 +411,7 @@ function manage_teams_form_removeMember_form_submit($form, $form_state) {
 
 function manage_teams_form_form_validate($form, &$form_state) {
 
+    try{
     $urlArray = explode('/', request_uri());
 
     //get url segments count to retrieve tid and mid variables with
@@ -423,7 +424,7 @@ function manage_teams_form_form_validate($form, &$form_state) {
     if(!strlen($tournamentID) > 12){
         //TODO: message that TID is missing
         drupal_set_message('Tournament is not specified.');
-        return;
+        return true;
     }
 
     //If tourney registration closed send back to details page
@@ -448,17 +449,23 @@ function manage_teams_form_form_validate($form, &$form_state) {
     if(empty($teamValue))
     {
         form_set_error('team_name',t('You must either create a team or choose one to enter:'));
-        return;
+        return true;
     }
 
     //prevent duplicate team names in same tourney
     if(isTeamNameTaken($tournamentID, $teamValue)){
         //advise user to choose another team name or a new variant
         form_set_error('team_name',t('The team name ' . $teamValue . ' is taken in this tournament. Try again with a different or altered team name.'));
-        return;
+        return true;
     }
 
+    }
+    catch (EntityMetadataWrapperException $exc) {
+        _watchdog_log($exc->getMessage(),$exc);
 
+        return false;
+
+    }
 
 }
 
@@ -500,7 +507,6 @@ function manage_teams_form_form_submit($form, &$form_state) {
         else
         {
             drupal_set_message('No team is specified.');
-            return;
         }
 
         $teamNID = createTeamAndAddToTournament($tournament_id, $teamName, $GLOBALS['user'],$createTeam);
