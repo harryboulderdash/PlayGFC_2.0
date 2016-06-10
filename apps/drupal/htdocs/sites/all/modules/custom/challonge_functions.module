@@ -236,7 +236,7 @@ function updateSingleTeamStatus($tournamentURL,$teamNID){
 
 
         //define STATUS_ID variable to hold team users
-        $arr_tid = array('112');
+        $arr_tid = array(MEMBER_REMOVED_STATUS);
 
         //create object for tournament
         $tourneywrapper = GetWrapperByEntityID(getTournamentNodeIDByChallongeID($tournamentURL));
@@ -270,7 +270,7 @@ function updateSingleTeamStatus($tournamentURL,$teamNID){
                 $numMembers = 0;
             }
 
-            _watchdog_log('LOOKED UP TEAM MEMBERS: ' . $numMembers . ' WERE FOUND. ' . (microtime(true) - $start));
+            //_watchdog_log('ELIGIBILITY UPDATE -- LOOKED UP TEAM MEMBERS: ' . $numMembers . ' WERE FOUND. ' . (microtime(true) - $start));
 
 
             //SET ELIGIBILITY VALUE ON TEAM
@@ -293,16 +293,9 @@ function updateSingleTeamStatus($tournamentURL,$teamNID){
             unset($teamwrapper);
             unset($tourneywrapper);
 
-            //field_eligibility
-            /*
-             *  Eligible|Eligible
-                Awaiting Team Members|Awaiting Team Members
-                Too Many Team Members|Too Many Team Members
-                Gamertags Not Validated|Gamertags Not Validated
-                Missing Credits|Missing Credits
 
-             *
-             * */
+        //call registration closed in case we've now hit our max teams
+        closeRegistrationWhenMaxTeamsReached($tournamentURL);
 
 
         //return NULL if no team found
@@ -313,6 +306,53 @@ function updateSingleTeamStatus($tournamentURL,$teamNID){
         return false;
     }
 
+
+}
+
+function closeRegistrationWhenMaxTeamsReached($tournamentURL){
+
+    try{
+
+        $tid = getTournamentNodeIDByChallongeID($tournamentURL);
+        $w = GetWrapperByEntityID($tid);
+        foreach($w->field_tournament_teams_entered->value() as $team){
+
+            $arrTeams[] = $team->nid;
+        };
+
+
+        //NEXT PERFORM QUERY OF TEAMS USING NIDS ARRAY AND TEAM NAME
+        //LOOKUP TEAMS NIDS IN TOURNEY
+        $query = new EntityFieldQuery();
+
+        //load active team members
+        $query->entityCondition('entity_type', 'node')
+            ->entityCondition('bundle', 'team')
+            ->propertyCondition('nid', $arrTeams, 'IN')
+            ->fieldCondition('field_eligibility', 'value', 'Eligible', '=')
+            ->addMetaData('account', user_load(1)); // Run the query as user 1.
+
+        $result = $query->execute();
+
+        //Check the COUNT of ELIGIBLE TEAMS
+        if (isset($result['node'])) {
+            $numTeams = COUNT($result['node']);
+        }else{
+            $numTeams = 0;
+        }
+
+        if($numTeams >= $w->field_bracket_size->value()){
+
+            $w->field_tournament_status->set('Registration Closed');
+            $w->save();
+        }
+
+        return true;
+
+    } catch (ErrorException $e) {
+        _watchdog_log($e->getMessage() . ' ' . $e->getPrevious() . ' ' . $e->getLine() . ' ' . $e->getTraceAsString());
+        return false;
+    }
 
 }
 
@@ -436,39 +476,62 @@ function StartTournament_RemoveIneligible($tournamentid){
 
     $c = new ChallongeAPI('XqrMnBPs15MvmX0izddB4zyIHKswRCoaIAyq4cTt');
 
-    //debug timer
-    //$start = microtime(true);
-
-
     try{
 
-        //load up GFC tourney data
-        $tourneyNID = getTournamentNodeIDByChallongeID($tournamentid);
-        $tourneywrapper = GetWrapperByEntityID($tourneyNID);
+        //**************STEP 1 LOAD TOURNEY NODE*****************
 
-        //iterate through the teams
-        //remove from challonge tourney where status isn't eligible.
-        foreach ($tourneywrapper->field_tournament_teams_entered->getIterator() as $delta => $GFCteam) {
-
-
-            //check team for status
-            if($GFCteam->field_team_challonge_id->value()!=null) {
-                if ($GFCteam->field_eligibility->value() != 'Eligible') {
-
-                    //remove team from Challonge
-                    $result = $c->deleteParticipant($tournamentid, $GFCteam->field_team_challonge_id->value());
-
-                    //Update Team status to 'REMOVED'
-                    $GFCteam->field_eligibility->set('Removed');
-
-                    //save it out
-                    $GFCteam->save();
-
-                    drupal_set_message('updated status to removed');
-                }
+        $arrTeams = array();
+        $tid = getTournamentNodeIDByChallongeID($tournamentid);
+        $w = GetWrapperByEntityID($tid);
+        foreach($w->field_tournament_teams_entered->value() as $team){
+            //make sure there is a nid first just in case
+            if($team->nid) {
+                $arrTeams[] = $team->nid;
             }
+        };
+
+
+        //NEXT PERFORM QUERY OF TEAMS USING NIDS ARRAY AND TEAM NAME
+        //LOOKUP TEAMS NIDS IN TOURNEY
+        $query = new EntityFieldQuery();
+
+        //load active team members
+        $query->entityCondition('entity_type', 'node')
+            ->entityCondition('bundle', 'team')
+            ->propertyCondition('nid', $arrTeams, 'IN')
+            ->fieldCondition('field_eligibility', 'value', 'Eligible', '!=')
+            ->addMetaData('account', user_load(1)); // Run the query as user 1.
+
+        $result = $query->execute();
+
+        //Loop through NOT ELIGIBLE teams and remove them.
+        //print_r($result);
+        //return true;
+
+        if (!empty($result['node'])) {
+            $nids = array_keys($result['node']);
         }
 
+
+        foreach($nids as $nid){
+
+            //load team wrapper
+            $w = GetWrapperByEntityID($nid);
+
+            //remove team from Challonge
+            $result = $c->deleteParticipant($tournamentid, $w->field_team_challonge_id->value());
+
+            //note team name and current status
+            drupal_set_message('Team' . $w->field_team_name->value() . ' was status: ' . $w->field_eligibility->value() . ' updated status to status:REMOVED');
+
+            //Update Team status to 'REMOVED'
+            $w->field_eligibility->set('Removed');
+
+            //save it out
+            $w->save();
+
+            unset($w);
+        }
 
 
     }
@@ -481,6 +544,54 @@ function StartTournament_RemoveIneligible($tournamentid){
 
 }
 
+function isTeamNameTaken($tournamentURL, $teamName){
+    try{
+
+        //**************STEP 1 LOAD TOURNEY NODE*****************
+
+        $tid = getTournamentNodeIDByChallongeID($tournamentURL);
+        $w = GetWrapperByEntityID($tid);
+        $arrTeams = array();
+        foreach($w->field_tournament_teams_entered->value() as $team){
+
+            $arrTeams[] = $team->nid;
+        };
+
+        //drupal_set_message(print_r($arrTeams));
+        //return;
+
+        //NEXT PERFORM QUERY OF TEAMS USING NIDS ARRAY AND TEAM NAME
+        //LOOKUP TEAMS NIDS IN TOURNEY
+        $query = new EntityFieldQuery();
+
+        //load active team members
+        $query->entityCondition('entity_type', 'node')
+                ->entityCondition('bundle', 'team')
+                ->propertyCondition('nid', $arrTeams, 'IN')
+                ->fieldCondition('field_team_name', 'value', $teamName, '=')
+                ->addMetaData('account', user_load(1)); // Run the query as user 1.
+
+            $result = $query->execute();
+
+        //Check the COUNT of active Team Members for this team
+        if (isset($result['node'])) {
+            //IF RESULT HERE THEN NAME IS TAKEN, USER Sdddp
+            return true;
+        }
+        else{
+            //NAME IS UNIQUE, USER CAN TAKE IT
+            return false;
+        }
+
+    }
+
+     catch (ErrorException $e) {
+        _watchdog_log('isTeamNameUnique ' . $e->getMessage() . ' ' . $e->getPrevious() . ' ' . $e->getLine() . ' ' . $e->getTraceAsString());
+    }
+
+    return false;
+    
+}
 
 function StartTournament($tournamentid){
 
@@ -1820,7 +1931,7 @@ function StartTournamentButtonContextBased($user,$tournamentID)
 
             $w = GetWrapperByEntityID($touramentNID);
 
-            if ($w->field_tournament_status->value() == 'Pending') {
+            if (($w->field_tournament_status->value() == 'Pending') || ($w->field_tournament_status->value() == 'Registration Closed')) {
 
                 //load the start button form
                 $block = block_load('Manage_Tournaments', 'Manage_Tournaments_Form_Block');
@@ -1851,7 +1962,7 @@ function StartTournamentButtonContextBased($user,$tournamentID)
 
                 $w = GetWrapperByEntityID($touramentNID);
 
-                if ($w->field_tournament_status->value() == 'Pending') {
+                if (($w->field_tournament_status->value() == 'Pending') || ($w->field_tournament_status->value() == 'Registration Closed'))  {
 
                     //load the start button form
                     $block = block_load('Manage_Tournaments', 'Manage_Tournaments_Validate_Block');
@@ -1879,7 +1990,7 @@ function finalzeTeamsTournamentContextBased($user, $tournamentID)
 
             $w = GetWrapperByEntityID($touramentNID);
 
-            if ($w->field_tournament_status->value() == 'Pending') {
+            if (($w->field_tournament_status->value() == 'Pending') || ($w->field_tournament_status->value() == 'Registration Closed'))  {
 
                 //load the start button form
                 $block = block_load('Manage_Tournaments', 'Manage_Tournaments_EvictTeams_Block');
@@ -1907,7 +2018,7 @@ function updateTeamEligibilityByTournamentContextBased($user, $tournamentID)
 
             $w = GetWrapperByEntityID($touramentNID);
 
-            if ($w->field_tournament_status->value() == 'Pending') {
+            if (($w->field_tournament_status->value() == 'Pending') || ($w->field_tournament_status->value() == 'Registration Closed'))  {
 
                 //load the start button form
                 $block = block_load('Manage_Tournaments', 'Manage_Tournaments_UpdateTeamStatus_Block');
