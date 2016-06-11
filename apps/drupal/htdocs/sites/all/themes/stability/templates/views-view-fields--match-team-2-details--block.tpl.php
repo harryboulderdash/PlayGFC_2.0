@@ -54,8 +54,15 @@ AVAILABLE FIELDS:
 
 <tr>
     <td><?php print $fields['name']->content; ?></td>
-    <td><?php print $fields['field_gamertag']->content; ?></td>
     <td>
+        <?php if($fields['field_tournament_gaming_platform']->content == "XBOX Live"): ?>
+            <?php print $fields['field_xbox_gamertag']->content; ?>
+        <?php endif; ?>
+
+        <?php if($fields['field_tournament_gaming_platform']->content == "PS4"): ?>
+            <?php print $fields['field_gamertag']->content; ?>
+        <?php endif; ?>
+    </td>
 
         <?php if(isset($fields['field_twitch_handle']->content)): ?>
             <a href="http://www.twitch.tv/<?php print $fields['field_twitch_handle']->content; ?>" target="_blank"><i class="fa fa-twitch fa-lg"></i></a>

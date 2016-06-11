@@ -48,6 +48,7 @@ AVAILABLE FIELDS:
 [field_xbox_gamertag-format] == Raw format
 %1 == Content: Match Challonge ID (field_match_challonge_id) title
 !1 == Content: Match Challonge ID (field_match_challonge_id) input
+ * [field_tournament_gaming_platform] == Content: Tournament Gaming Platform
 
 
  */
@@ -56,9 +57,20 @@ AVAILABLE FIELDS:
 
 <tr>
     <td><?php print $fields['field_team_member_user']->content; ?></td>
-    <td><?php print $fields['field_gamertag']->content; ?></td>
-    <td>
 
+    //field_xbox_gamertag
+
+    <td>
+        <?php if($fields['field_tournament_gaming_platform']->content == "XBOX Live"): ?>
+            <?php print $fields['field_xbox_gamertag']->content; ?>
+        <?php endif; ?>
+
+        <?php if($fields['field_tournament_gaming_platform']->content == "PS4"): ?>
+            <?php print $fields['field_gamertag']->content; ?>
+        <?php endif; ?>
+    </td>
+
+    <td>
         <?php if(isset($fields['field_twitch_handle']->content)): ?>
             <a href="http://www.twitch.tv/<?php print $fields['field_twitch_handle']->content; ?>" target="_blank"><i class="fa fa-twitch fa-lg"></i></a>
         <?php endif; ?>
