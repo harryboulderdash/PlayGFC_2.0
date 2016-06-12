@@ -413,10 +413,8 @@ function manage_teams_form_form_validate($form, &$form_state) {
 
     try{
     $urlArray = explode('/', request_uri());
-
     //get url segments count to retrieve tid and mid variables with
     $count = count($urlArray);
-
     //set variable to tid value
     $tournamentID = $urlArray[$count - 1];
 
@@ -453,7 +451,7 @@ function manage_teams_form_form_validate($form, &$form_state) {
     }
 
     //prevent duplicate team names in same tourney
-    if(isTeamNameTaken($tournamentID, $teamValue)){
+  if(isTeamNameTaken($tournamentID, $teamValue)){
         //advise user to choose another team name or a new variant
         form_set_error('team_name',t('The team name ' . $teamValue . ' is taken in this tournament. Try again with a different or altered team name.'));
         return true;
