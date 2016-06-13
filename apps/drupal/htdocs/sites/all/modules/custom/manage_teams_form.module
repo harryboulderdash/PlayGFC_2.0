@@ -132,6 +132,9 @@ function manage_teams_form_block_view($delta = '') {
     //get url segments count to retrieve tid and mid variables with
     $tournamentID = $urlArray[(count($urlArray)) - 1];
 
+    //TODO FIX THIS****************************************************************************
+    //TODO: THE FOLLOWING CHECK IS THROWING ERRORS IF THE USER IF USER ISN'T CURRENTLY ON  TEAM
+
     //get array of any teams user is on in this tourney
     $teamArray = getTeamByTournamentByUser($currentUser->uid, $tournamentID);
 

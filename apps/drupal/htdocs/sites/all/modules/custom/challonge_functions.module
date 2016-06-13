@@ -320,6 +320,8 @@ function closeRegistrationWhenMaxTeamsReached($tournamentURL){
             $arrTeams[] = $team->nid;
         };
 
+        if(!$arrTeams){return false}
+
 
         //NEXT PERFORM QUERY OF TEAMS USING NIDS ARRAY AND TEAM NAME
         //LOOKUP TEAMS NIDS IN TOURNEY
@@ -472,23 +474,37 @@ function StartTournament_Validate($tournamentid){
 
 }
 
+/**
+ * @param $tournamentid
+ * @return bool
+ */
 function StartTournament_RemoveIneligible($tournamentid){
 
-    $c = new ChallongeAPI('XqrMnBPs15MvmX0izddB4zyIHKswRCoaIAyq4cTt');
-
     try{
+
+        $c = new ChallongeAPI('XqrMnBPs15MvmX0izddB4zyIHKswRCoaIAyq4cTt');
 
         //**************STEP 1 LOAD TOURNEY NODE*****************
 
         $arrTeams = array();
         $tid = getTournamentNodeIDByChallongeID($tournamentid);
+
+        //insure all teams have their Challonge IDs
+        $update = updateParticipantsFromChallonge($tid);
+
+
         $w = GetWrapperByEntityID($tid);
         foreach($w->field_tournament_teams_entered->value() as $team){
             //make sure there is a nid first just in case
             if($team->nid) {
                 $arrTeams[] = $team->nid;
             }
-        };
+        }
+
+        if(!$arrTeams){return true}
+
+        //drupal_set_message(var_dump($arrTeams));
+        //return true;
 
 
         //NEXT PERFORM QUERY OF TEAMS USING NIDS ARRAY AND TEAM NAME
@@ -508,39 +524,45 @@ function StartTournament_RemoveIneligible($tournamentid){
         //print_r($result);
         //return true;
 
-        if (!empty($result['node'])) {
+        if (isset($result['node'])) {
             $nids = array_keys($result['node']);
+
+            //return $nids;
+
+            foreach ($nids as $nid) {
+
+                //load team wrapper
+                $w = GetWrapperByEntityID($nid);
+
+                //REMOVE FROM CHALLONGE BUT LOG IF NO ID EXISTS ON TEAM DUE TO PRIOR FAILURE
+                if($w->field_team_challonge_id->value() != ''){
+                    //remove team from Challonge
+                    $result = $c->deleteParticipant($tournamentid, $w->field_team_challonge_id->value());
+                }else{
+                    _watchdog_log('MUST MANUALLY REMOVE FROM CHALLONGE: www.playgfc.com/node/' . $nid . 'no ID is present.');
+                }
+
+                //note team name and current status
+                drupal_set_message('tid: ' . $tournamentid . 'Team: ' . $w->field_team_name->value() . ' was status: ' . $w->field_eligibility->value() . ' updated status to status: REMOVED');
+
+                //Update Team status to 'REMOVED'
+                $w->field_eligibility->set('Removed');
+
+                //save it out
+                $w->save();
+
+                unset($w);
+
+            }
         }
 
+        return true;
 
-        foreach($nids as $nid){
-
-            //load team wrapper
-            $w = GetWrapperByEntityID($nid);
-
-            //remove team from Challonge
-            $result = $c->deleteParticipant($tournamentid, $w->field_team_challonge_id->value());
-
-            //note team name and current status
-            drupal_set_message('Team' . $w->field_team_name->value() . ' was status: ' . $w->field_eligibility->value() . ' updated status to status:REMOVED');
-
-            //Update Team status to 'REMOVED'
-            $w->field_eligibility->set('Removed');
-
-            //save it out
-            $w->save();
-
-            unset($w);
-        }
-
-
-    }
-    catch (ErrorException $e) {
+    }catch (ErrorException $e) {
         _watchdog_log('StartTournament_RemoveIneligible ' . $e->getMessage() . ' ' . $e->getPrevious() . ' ' . $e->getLine() . ' ' . $e->getTraceAsString());
         return false;
     }
 
-    return true;
 
 }
 
@@ -560,6 +582,9 @@ function isTeamNameTaken($tournamentURL, $teamName){
         //drupal_set_message(print_r($arrTeams));
         //return;
 
+        //If there are no teams RETURN FALSE as IT IS AVAILABLE!
+        if(!$arrTeams){return false;}
+
         //NEXT PERFORM QUERY OF TEAMS USING NIDS ARRAY AND TEAM NAME
         //LOOKUP TEAMS NIDS IN TOURNEY
         $query = new EntityFieldQuery();
@@ -575,7 +600,7 @@ function isTeamNameTaken($tournamentURL, $teamName){
 
         //Check the COUNT of active Team Members for this team
         if (isset($result['node'])) {
-            //IF RESULT HERE THEN NAME IS TAKEN, USER Sdddp
+            //IF RESULT HERE THEN NAME IS TAKEN, USER
             return true;
         }
         else{
@@ -669,7 +694,7 @@ function StartTournament($tournamentid){
 
         // Get all participants -- WORKS!
         // http://challonge.com/api/tournaments/:tournament/participants
-        $participants = $c->makeCall("tournaments/$challongeid/participants");
+        //$participants = $c->makeCall("tournaments/$challongeid/participants");
         $participants = $c->getParticipants($challongeid);
 
         //log response
@@ -821,6 +846,61 @@ function finalizeTournament($tournamentID){
      *
      * */
 
+
+}
+
+function updateParticipantsFromChallonge($tournamentNID){
+
+    try{
+
+        $c = new ChallongeAPI('XqrMnBPs15MvmX0izddB4zyIHKswRCoaIAyq4cTt');
+
+        //get tourney wrapper
+        $tw = GetWrapperByEntityID($tournamentNID);
+        //Load all participants from Challonge
+
+        //return $tw;
+
+        $participants = $c->getParticipants($tw->field_tournament_challonge_id->value());
+
+
+        foreach ($tw->field_tournament_teams_entered->getIterator() as $delta => $team) {
+
+            //set variable to team name
+            $teamname = $team->field_team_id->value();
+
+            //debug only
+           _watchdog_log('LOOK UP : ' .$teamname .  ' - ' . $team->field_team_name->value());
+
+
+            //update GFC teams with IDs
+            foreach ($participants as $participant) {
+
+                if (str_replace(' ', '', $participant->misc) == str_replace(' ', '', $teamname)) {
+
+                    //debug only
+                   _watchdog_log('MATCH FOUND : ' .$teamname .  ' - ' . $participant->misc);
+
+                    //if team matches name get id and update
+                    $team->field_team_challonge_id->set((integer)$participant->id);
+
+                    //set seed value here
+                    $team->field_team_current_seed->set((integer)$participant->seed);
+
+                    $team->save();
+                }
+
+            }
+        }
+
+        return true;
+
+    }
+    catch
+    (EntityMetadataWrapperException $exc) {
+        _watchdog_log($exc->getMessage(), $exc);
+        return false;
+    }
 
 }
 
@@ -1378,10 +1458,6 @@ function getTeamNodeIDbyChallongeID($teamChallongeID){
             $teamNID =  $node->nid;
         }
     }
-
-    return $teamNID;
-
-
 }
 
 function getExistingTeamsByUser($currentUser,$tournament_url=null){
@@ -1408,6 +1484,7 @@ function getExistingTeamsByUser($currentUser,$tournament_url=null){
 
 
     if (isset($result['team_members'])) {
+
         $teams = entity_load('team_members', array_keys($result['team_members']));
 
         //dpm($teams);
@@ -1427,66 +1504,69 @@ function getTeamByTournamentByUser($currentUserUID, $tournamentURL){
         //retrieve user UID
         $currentUserID = $currentUserUID;
         //define variable to hold team users
-        $teamMembers = array();
         $arr_tid = array('112');
-
 
         //create object for tournament
         $tourneywrapper = GetWrapperByEntityID(getTournamentNodeIDByChallongeID($tournamentURL));
 
-        //iterate throught the teams
-        foreach ($tourneywrapper->field_tournament_teams_entered->getIterator() as $delta => $team) {
+        //create array variable, maybe not needed but avoiding an error I saw
+        $arrTeams = array();
 
-            //set variable to team name
-            $teamNID = $team->getIdentifier();
+        //iterate through the teams and grab the team NIDS
+        foreach($tourneywrapper->field_tournament_teams_entered->value() as $team){
+            //collect nids in array for query
+            $arrTeams[] = $team->nid;
+        };
 
-            //set variable
-            $userTeams = array();
+        if(!$arrTeams){return false;}
 
-            //GET ALL USERS IN EACH TEAM
-            $query = new EntityFieldQuery();
+        //set variable
+        $userTeams = array();
 
-            //load active team members
-            $query->entityCondition('entity_type', 'team_members')
-                ->entityCondition('bundle', 'team_members')
-                ->fieldCondition('field_team_member_user', 'target_id', $currentUserID, '=')
-                ->fieldCondition('field_team_reference_from_team_m', 'target_id', $teamNID, '=')
-                ->fieldCondition('field_team_member_status', 'tid', $arr_tid, 'NOT IN')
+        //GET ALL USERS IN EACH TEAM
+        $query = new EntityFieldQuery();
 
-                ->addMetaData('account', user_load(1)); // Run the query as user 1.
+        //load active team members
+        $query->entityCondition('entity_type', 'team_members')
+            ->entityCondition('bundle', 'team_members')
+            ->fieldCondition('field_team_member_user', 'target_id', $currentUserID, '=')
+            ->fieldCondition('field_team_reference_from_team_m', 'target_id', $arrTeams, 'IN')
+            ->fieldCondition('field_team_member_status', 'tid', $arr_tid, 'NOT IN')
+            ->addMetaData('account', user_load(1)); // Run the query as user 1.
 
-            $result = $query->execute();
-
-            //TODO!!!! GET ARRAY OF THE UIDS ONLY
-
-            if (isset($result['team_members'])) {
-
-                //test only
-                //return $result;
-                _watchdog_log('USER HAS A TOURNEY TEAM ALREADY: ' . implode(" ",array_keys($result['team_members'])), NULL,FALSE, WATCHDOG_DEBUG);
+        $result = $query->execute();
 
 
-                $teamMembers = entity_load('team_members', array_keys($result['team_members']));
+        if (isset($result['team_members'])) {
 
-                //return $teamMembers;
+            //DEBUG ONLY SEND BACK RESULT ARRAY
+           // return $result;
 
-                //dpm($teams);
-                foreach ($teamMembers as $teamMember) {
 
-                    if($teamMember->field_team_member_user['und'][0]['target_id'] = $currentUserID) {
-                        //dpm($team);
-                        $userTeams[$teamMember->field_team_reference_from_team_m['und'][0]['target_id']] = GetWrapperByEntityID($teamMember->field_team_reference_from_team_m['und'][0]['target_id'])->field_team_name->value();
+            //test only
+            //return $result;
+            _watchdog_log('USER HAS A TOURNEY TEAM ALREADY: ' . implode(" ",array_keys($result['team_members'])), NULL,FALSE, WATCHDOG_DEBUG);
 
-                    }
+            $teamMembers = entity_load('team_members', array_keys($result['team_members']));
+
+            //return $teamMembers;
+
+            //dpm($teams);
+           foreach ($teamMembers as $teamMember) {
+
+                if($teamMember->field_team_member_user['und'][0]['target_id'] = $currentUserID) {
+                    //dpm($team);
+                    $userTeams[$teamMember->field_team_reference_from_team_m['und'][0]['target_id']] = GetWrapperByEntityID($teamMember->field_team_reference_from_team_m['und'][0]['target_id'])->field_team_name->value();
+
                 }
-
-                //clean up
-                unset($teamMembers);
-
-                //RETURN TEAM NAME AND ID IF FOUND
-                return $userTeams;
-
             }
+
+            //clean up
+            unset($teamMembers);
+
+            //RETURN TEAM NAME AND ID IF FOUND
+            return $userTeams;
+
         }
 
         unset($userTeams);
@@ -1494,34 +1574,10 @@ function getTeamByTournamentByUser($currentUserUID, $tournamentURL){
         //return NULL if no team found
         return false;
 
-    } catch (Exception $e) {
+    }
+    catch (Exception $e) {
         _watchdog_log($e->getMessage() . ' ' . $e->getLine() . ' ' . $e->getTraceAsString());
     }
-
-    /*
-     * NOTE: Load teams from tourney
-     * THEN, in foreach return all users for team in array and check if uid is in array
-     * IF SO, return Team ID
-     * IF NOT, return null
-     *
-     * 1. load all teams from tourney and iterate (similar to stuff in update matches)
-     * 2. load users exactly like 'getExistingTeamsByUser' query, ONLY ADD FIELD CONDITION FOR TEAM ID
-     * 3. ADD CONDITION FOR STATUS != REMOVED
-     * 4. USE in_array FUNCTION TO CHECK IF USER THERE
-     * 5. IF SO, RETURN, ELSE WHEN TEAMS LOOP DONE RETURN NULL
-     *
-     * CODE TO CHECK ARRAY FOR UID VALUE
-     *
-     * $os = array("Mac", "NT", "Irix", "Linux");
-        if (in_array("Irix", $os)) {
-            echo "Got Irix";
-        }
-     * add user
-     *
-     *
-     * */
-
-
 
 }
 
