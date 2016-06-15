@@ -1729,24 +1729,8 @@ function createTeamAndAddToTournament($tournamentID, $teamName, &$currentUser, $
 
         try {
 
-            //AddPlayerToTeam($newTeamNode->nid, $currentUser->uid, CAPTAIN_ROLE, 1);
-
-            //THE FOLLOWING IS NOW ITS OWN FUNCTION {AddPlayerToTeam} SO THAT PLAYERS CAN JOIN TEAMS INDEPENDENTLY
-            //create team members entity and wrap it
-            $entity = entity_create('team_members', array('type' => 'team_members'));
-            $emw = entity_metadata_wrapper('team_members', $entity);
-
-            //set field values
-            $emw->field_team_reference_from_team_m = $newTeamNode->nid;
-            $emw->field_team_member_role = CAPTAIN_ROLE; //captain taxonomy ID TODO, need to get this dynamically
-            $emw->field_team_member_user = $currentUser->uid;
-
-            //denote that team creator entry is not provisional so mark as confirmed
-            $emw->field_team_member_entry_confirme = 1;
-
-
-            //save it out
-            $emw->save();
+            //call function to add current user to newly created team passing in new team ID
+            AddPlayerToTeam($newTeamNode->nid, $currentUser->uid, CAPTAIN_ROLE, 1);;
 
             //debug code
             _watchdog_log('createTeamAndAddToTournament: user: ' . $currentUser->uid . ' added as Captain to team ' .$newTeamNode->nid) ;
@@ -1780,6 +1764,11 @@ function createTeamAndAddToTournament($tournamentID, $teamName, &$currentUser, $
 
         //save it out
         $emwtourney->save();
+
+
+        //NOW UPDATE TEAM ELIGIBILITY FOR THIS TEAM ONLY
+        updateSingleTeamStatus($emwtourney->field_tournament_challonge_url->value(), $teamNID);
+
 
         //log if this worked
 //        _watchdog_log('adding team to tourney:' . print_r($emwtourney));
@@ -1829,6 +1818,9 @@ function createTeamAndAddToTournament($tournamentID, $teamName, &$currentUser, $
         drupal_set_message(t('Your team has been successfully entered in this tournament.'));
 
         return $teamNID;
+
+
+        //3. Update team eligiblity
 
 //exception handler
     } catch (Exception $e) {
