@@ -61,9 +61,13 @@ function manage_tournaments_block_view($delta = ''){
             $block['content'] = drupal_get_form('manage_tournaments_evict_form');
             break;
         case 'Manage_Tournaments_UpdateTeamStatus_Block':
-        $block['subject'] = t('Update Eligibility');
-        $block['content'] = drupal_get_form('manage_tournaments_updatestatus_form');
-        break;
+            $block['subject'] = t('Update Eligibility');
+            $block['content'] = drupal_get_form('manage_tournaments_updatestatus_form');
+            break;
+        case 'Manage_Tournaments_CompleteTournament_Block';
+            $block['subject'] = t('Complete Tournament');
+            $block['content'] = drupal_get_form('manage_tournaments_complete_tournament_form');
+            break;
     }
     return $block;
 
@@ -139,6 +143,27 @@ function manage_tournaments_evict_form($form, &$form_state){
 
 
     return $form;
+}
+
+function manage_tournaments_complete_tournament_form($form, &$form_state){
+    $form = array();
+
+    $form['FinishAndLockResults_Tourney'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Complete Tournament'),
+        '#collapsible' => TRUE,
+        '#collapsed' => FALSE,
+    );
+
+    $form['FinishAndLockResults_Tourney']['submit']=array(
+        '#type'=>'submit',
+        '#title'=>'Complete Tournament - Lock Results!',
+        '#value'=>t('Complete Tournament')
+    );
+
+
+    return $form;
+    
 }
 
 function manage_tournaments_updatestatus_form($form, &$form_state){
@@ -224,6 +249,35 @@ function manage_tournaments_validate_form_submit($form, &$form_state)
         _watchdog_log($e->getMessage() . ' ' . $e->getLine() . ' ' . $e->getTraceAsString());
     }
 }
+
+function manage_tournaments_complete_tournament_form_submit($form, &$form_state){
+
+    try {
+        //grab the value of the last section and translate into NID values
+        $tournamentID = getURLSegment(request_uri(), 1);
+
+        //validate state of data for tourney and fix where needed
+        //get and corrections back as array and display them.
+        $arrErrors = CompleteTournament($tournamentID);
+
+        if ($arrErrors){
+            //display message on screen
+            drupal_set_message(t('Tournament Winner & Results Locked'));
+
+        } else {
+
+            //display message on screen
+            drupal_set_message(t('PROBLEM: Tournament Winner & Results NOT Locked. Check Logs.'));
+
+        }
+        return true;
+
+    } catch (Exception $e) {
+        _watchdog_log($e->getMessage() . ' ' . $e->getLine() . ' ' . $e->getTraceAsString());
+    }
+    
+}
+
 
 function manage_tournaments_evict_form_submit($form, &$form_state){
     //deletes teams from tourney who are not currently eligible
