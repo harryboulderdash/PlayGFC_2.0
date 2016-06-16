@@ -618,6 +618,32 @@ function isTeamNameTaken($tournamentURL, $teamName){
     
 }
 
+function CompleteTournament($tournamentURL){
+    try{
+        $c = new ChallongeAPI('XqrMnBPs15MvmX0izddB4zyIHKswRCoaIAyq4cTt');
+
+        //update challonge to lock results and set final rankings
+        $c->finalizeTournament($tournamentURL);
+
+        //update tourney status in GFC
+        $tid = getTournamentNodeIDByChallongeID($tournamentURL);
+        $w = GetWrapperByEntityID($tid);
+
+        $w->field_tournament_status->set('Completed');
+        $w->save();
+
+        unset($w);
+
+    }
+    catch (ErrorException $e) {
+        _watchdog_log('CompleteTournament ' . $e->getMessage() . ' ' . $e->getPrevious() . ' ' . $e->getLine() . ' ' . $e->getTraceAsString());
+        //if here then failed
+        return false;
+    }
+
+    return true;
+}
+
 function StartTournament($tournamentid){
 
     //check in tournament
@@ -2070,6 +2096,35 @@ function updateTeamEligibilityByTournamentContextBased($user, $tournamentID)
 
                 //load the start button form
                 $block = block_load('Manage_Tournaments', 'Manage_Tournaments_UpdateTeamStatus_Block');
+                $output = drupal_render(_block_get_renderable_array(_block_render_blocks(array($block))));
+
+            }
+        }
+    }
+    return $output;
+}
+
+
+function finishTournamentLockResultsContextBased($user, $tournamentID)
+{
+
+    $roleid = 3; //admin role
+    $output = '';
+
+    if (user_has_role($roleid, $user)) {
+        //yes this user has this role, now check tournament status
+
+        //check for tournament status
+        if (strlen($tournamentID) > 12) {
+            $touramentNID = getTournamentNodeIDByChallongeID($tournamentID);
+
+
+            $w = GetWrapperByEntityID($touramentNID);
+
+            if ($w->field_tournament_status->value() == 'Started')  {
+
+                //load the start button form
+                $block = block_load('Manage_Tournaments', 'Manage_Tournaments_CompleteTournament_Block');
                 $output = drupal_render(_block_get_renderable_array(_block_render_blocks(array($block))));
 
             }
