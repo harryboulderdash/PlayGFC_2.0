@@ -194,7 +194,10 @@ class ChallongeAPI {
   public function randomizeParticipants($tournament_id) {
     return $this->makeCall("tournaments/$tournament_id/participants/randomize", array(), "post");
   }
-  
+
+  public function finalizeParticipants($tournament_id) {
+    return $this->makeCall("tournaments/$tournament_id/finalize", array(), "post");
+  }
   
   public function getMatches($tournament_id, $params=array()) {
     return $this->makeCall("tournaments/$tournament_id/matches", $params);
