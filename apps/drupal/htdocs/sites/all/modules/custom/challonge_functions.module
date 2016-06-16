@@ -2137,13 +2137,32 @@ function updateTeamEligibilityByTournamentContextBased($user, $tournamentID)
         return true;
     }
 
+function getBankBalanceByUser($user_id){
 
 
-    function getURLSegment($uri, $segIndex)
-    {
+try {
+    //Call stored proc to caclualate credits balance for user
+    $result = db_query('call sp_getUserBankBalanceCalculated(:uid);', array(':uid' => $user_id));
 
-        $arrURL = explode('/', $uri);
+    //grab result
+    $record = $result->fetchObject();
 
-        return $arrURL[count($arrURL) - $segIndex];
-
+    //grab the value from the result set, it's a scalar in reality
+    //it !exist if there are no credits for a user
+    return $record->credit_balance;
     }
+    catch (ErrorException $e)
+    {
+        _watchdog_log('getBankBalanceByUser ' . $e->getMessage() . ' ' . $e->getPrevious() . ' ' . $e->getLine() . ' ' . $e->getTraceAsString());
+        return false;
+    }
+}
+
+function getURLSegment($uri, $segIndex)
+{
+
+    $arrURL = explode('/', $uri);
+
+    return $arrURL[count($arrURL) - $segIndex];
+
+}
