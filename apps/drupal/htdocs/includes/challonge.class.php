@@ -71,12 +71,12 @@ class ChallongeAPI {
         break;
         
       case 'delete':
-        $params["_method"] = "delete";
+        //$params["_method"] = "delete";
         $fields = http_build_query($params, '', '&');
         $curlheaders[] = 'Content-Length: ' . strlen($fields);
         curl_setopt($curl_handle, CURLOPT_POST, 1);
         curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $fields);
-        // curl_setopt($curl_handle, CURLOPT_CUSTOMREQUEST, "DELETE");
+        curl_setopt($curl_handle, CURLOPT_CUSTOMREQUEST, "DELETE");
         break;
         
       case "get":
@@ -195,7 +195,11 @@ class ChallongeAPI {
   public function randomizeParticipants($tournament_id) {
     return $this->makeCall("tournaments/$tournament_id/participants/randomize", array(), "post");
   }
-  
+
+  //finalize
+  public function finalizeParticipants($tournament_id) {
+    return $this->makeCall("tournaments/$tournament_id/finalize", array(), "post");
+  }
   
   public function getMatches($tournament_id, $params=array()) {
     return $this->makeCall("tournaments/$tournament_id/matches", $params);
