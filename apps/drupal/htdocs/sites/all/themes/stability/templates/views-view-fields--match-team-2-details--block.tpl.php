@@ -63,7 +63,7 @@ AVAILABLE FIELDS:
             <?php print $fields['field_gamertag']->content; ?>
         <?php endif; ?>
     </td>
-
+    <td>
         <?php if(isset($fields['field_twitch_handle']->content)): ?>
             <a href="http://www.twitch.tv/<?php print $fields['field_twitch_handle']->content; ?>" target="_blank"><i class="fa fa-twitch fa-lg"></i></a>
         <?php endif; ?>
@@ -79,7 +79,6 @@ AVAILABLE FIELDS:
         <?php if(isset($fields['field_user_facebook_link']->content)): ?>
             <a href="https://www.facebook.com/<?php print $fields['field_user_facebook_link']->content; ?>" target="_blank"><i class="fa fa-facebook-square fa-lg"></i></a>
         <?php endif; ?>
-
 
     </td>
     <td><i class="fa fa-check-circle" style="color: green;"></i></td>
