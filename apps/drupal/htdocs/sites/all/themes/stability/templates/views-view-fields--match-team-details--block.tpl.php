@@ -58,7 +58,7 @@ AVAILABLE FIELDS:
 <tr>
     <td><?php print $fields['field_team_member_user']->content; ?></td>
 
-    //field_xbox_gamertag
+    <!--//field_xbox_gamertag -->
 
     <td>
         <?php if($fields['field_tournament_gaming_platform']->content == "XBOX Live"): ?>
@@ -89,5 +89,7 @@ AVAILABLE FIELDS:
 
     </td>
 
-    <td><i class="fa fa-check-circle" style="color: green;"></i></td>
+    <td>
+        <i class="fa fa-check-circle" style="color: green;"></i>
+    </td>
 </tr>
